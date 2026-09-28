@@ -69,7 +69,7 @@ export function Technology() {
             kicker="The technology"
             bold="One system"
             serif="many parts"
-            lead="We choose tools for the job, then connect them so they behave like one intelligent system."
+            lead="We choose the right tool for each job, then connect everything so it behaves like one intelligent system."
           />
           <div className={styles.tabs} role="tablist" aria-label="Technology areas" data-reveal="up">
             {layout.map((c, i) => (

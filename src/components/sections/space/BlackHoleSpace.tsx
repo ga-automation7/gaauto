@@ -180,7 +180,7 @@ export function BlackHoleSpace() {
             <span className={styles.serif}>bends</span>
           </h2>
           <p className={`${styles.support} t-lead`}>
-            A black hole, ray-traced live in your browser — light itself curving around it.
+            A black hole, ray traced live in your browser, with light itself curving around it.
           </p>
         </div>
 
@@ -189,11 +189,11 @@ export function BlackHoleSpace() {
             <span className={styles.bold}>Every system has</span>
             <span className={styles.serif}>a centre of gravity.</span>
           </p>
-          <p className={`${styles.support} t-lead`}>Ours is intelligence — everything we build turns around it.</p>
+          <p className={`${styles.support} t-lead`}>Ours is intelligence. Everything we build turns around it.</p>
         </div>
 
         <div className={`container ${styles.beat} ${styles.three}`} data-beat="three">
-          <p className={styles.small}>Beyond the horizon —</p>
+          <p className={styles.small}>Beyond the horizon…</p>
         </div>
 
         <p className={styles.hint} data-beat="hint" aria-hidden="true">

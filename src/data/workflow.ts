@@ -108,7 +108,7 @@ export const workflowEdges: [string, string][] = [
 /** The event log that scrolls by as the system runs (illustrative, not client data). */
 export const workflowEvents: { time: string; source: string; message: string }[] = [
   { time: '09:41:02', source: 'WhatsApp', message: 'New enquiry received' },
-  { time: '09:41:02', source: 'AI agent', message: 'Intent understood — pricing request' },
+  { time: '09:41:02', source: 'AI agent', message: 'Intent understood: pricing request' },
   { time: '09:41:03', source: 'AI agent', message: 'Lead qualified · priority high' },
   { time: '09:41:03', source: 'CRM', message: 'Contact + deal created' },
   { time: '09:41:04', source: 'WhatsApp', message: 'Personalised reply sent' },
@@ -183,7 +183,7 @@ export const phaseSignals: { source: string; input: string; reading: string[] }[
   },
   {
     source: 'Form',
-    input: '“Looking for a website and CRM set-up”',
+    input: '“Looking for a new website and a CRM”',
     reading: ['Intent · new project', 'Fit · strong'],
   },
   { source: 'Call', input: 'Voice note · 0:42', reading: ['Transcribed', 'Summary ready'] },
@@ -214,24 +214,24 @@ export const transformationPhases = [
     id: 'energy',
     index: '01',
     label: 'Intelligence',
-    text: 'Raw capability: models, agents, automation — powerful, but not yet pointed at anything.',
+    text: 'Raw capability. Models, agents and automation, powerful on their own but not yet pointed at anything useful.',
   },
   {
     id: 'network',
     index: '02',
     label: 'Network',
-    text: 'We connect it to your channels, tools and data, so it can see how your business actually works.',
+    text: 'We connect that intelligence to your channels, tools and data, so it can see how your business really works.',
   },
   {
     id: 'workflow',
     index: '03',
     label: 'Workflow',
-    text: 'The flow of work is mapped end to end — who does what, when, and what should happen next.',
+    text: 'Then we map the flow of work from start to finish: who does what, when, and what should happen next.',
   },
   {
     id: 'system',
     index: '04',
     label: 'System',
-    text: 'And then it runs. Every enquiry handled, every record updated, every hand-off automatic.',
+    text: 'And then it runs. Every enquiry handled, every record updated, every handover automatic, and all of it visible.',
   },
 ] as const;

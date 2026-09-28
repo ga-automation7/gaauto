@@ -30,7 +30,7 @@ export function validateInquiry(inquiry: Inquiry): string | null {
 export function buildMailto(inquiry: Inquiry): string {
   const subject = inquiry.interests.length
     ? `Project enquiry — ${inquiry.interests.join(', ')}`
-    : 'Project enquiry — GA Automations';
+    : 'Project enquiry for GA Automations';
   const body = [
     inquiry.message?.trim() || 'Hi GA Automations, I would like to talk about a project.',
     '',

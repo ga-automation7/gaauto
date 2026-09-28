@@ -25,7 +25,7 @@ const LAYERS = [
     meta: ['Fig. 01', 'Input layer'] as [string, string],
     bold: 'Perception',
     serif: 'sees first',
-    text: 'Every system starts by noticing — a message, a form, a document, a call. We teach software to read the signals your business already produces.',
+    text: 'Every system begins by noticing. A message, a form, a document, a phone call. We teach software to read the signals your business already produces, in whatever shape they arrive.',
     trace: 'Signal → structure',
     Visual: PerceptionVisual,
     shape: 'landscape' as const,
@@ -35,7 +35,7 @@ const LAYERS = [
     meta: ['Fig. 02', 'Reasoning layer'] as [string, string],
     bold: 'Intelligence',
     serif: 'understands',
-    text: 'Language models that grasp intent and context, grounded in your own data rather than the internet’s guesses.',
+    text: 'Language models that grasp intent and context, grounded in your own data rather than guesses from the open internet.',
     trace: 'Context → decision',
     Visual: IntelligenceVisual,
     shape: 'tall' as const,
@@ -45,7 +45,7 @@ const LAYERS = [
     meta: ['Fig. 03', 'Coordination layer'] as [string, string],
     bold: 'Orchestration',
     serif: 'in concert',
-    text: 'Agents, tools and people hand work to each other in the right order, with nothing lost in between.',
+    text: 'Agents, tools and people pass work to one another in the right order, and nothing gets lost along the way.',
     trace: 'Many parts → one flow',
     Visual: OrchestrationVisual,
     shape: 'landscape' as const,
@@ -55,7 +55,7 @@ const LAYERS = [
     meta: ['Fig. 04', 'Process layer'] as [string, string],
     bold: 'Automation',
     serif: 'never pauses',
-    text: 'The repeatable parts of a process run continuously in the background — every time, at any hour, the same way.',
+    text: 'The repeatable parts of a process run quietly in the background, every time, at any hour, in exactly the same way.',
     trace: 'Steps → routine',
     Visual: AutomationVisual,
     shape: 'landscape' as const,
@@ -65,7 +65,7 @@ const LAYERS = [
     meta: ['Fig. 05', 'Outcome layer'] as [string, string],
     bold: 'Execution',
     serif: 'delivers',
-    text: 'Inputs become outcomes: a qualified lead, a booked appointment, an updated record. Logged, measurable, accountable.',
+    text: 'Inputs become outcomes: a qualified lead, a booked appointment, an updated record. Every one logged, measurable and accountable.',
     trace: 'Input → outcome',
     Visual: ExecutionVisual,
     shape: 'landscape' as const,
@@ -144,7 +144,7 @@ export function Journal() {
             </span>
           </h2>
           <p className={`${styles.lead} t-lead`} data-reveal="up">
-            Every intelligent system we build moves through five layers. This is how raw input becomes finished work.
+            Every intelligent system we build passes through five layers. Here is how raw input becomes finished, dependable work.
           </p>
         </header>
 

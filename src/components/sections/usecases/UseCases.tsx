@@ -72,7 +72,7 @@ export function UseCases() {
             kicker="Use cases"
             bold="What we"
             serif="can build"
-            lead="Real systems for real work. Each one runs on its own, and each one gets better connected to the rest."
+            lead="Real systems for real work. Each one runs perfectly well on its own, and each grows more capable once it is connected to the rest."
           />
           <p className={`${styles.counter} t-num`} aria-hidden="true">
             <span>{String(current).padStart(2, '0')}</span> / {String(cases.length).padStart(2, '0')}

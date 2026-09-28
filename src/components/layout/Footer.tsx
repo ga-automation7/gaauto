@@ -40,7 +40,7 @@ export function Footer() {
       track({ name: 'inquiry_submit', via: result.via });
       setStatus({
         tone: 'ok',
-        text: result.via === 'endpoint' ? 'Received — we will reply within one working day.' : 'Opening your email app with everything filled in…',
+        text: result.via === 'endpoint' ? 'Received. We will reply within one working day.' : 'Opening your email app with everything filled in…',
       });
     } else setStatus({ tone: 'error', text: result.error });
   };

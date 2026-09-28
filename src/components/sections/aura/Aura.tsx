@@ -19,17 +19,17 @@ import { useVisibleCanvas } from '@/hooks/useVisibleCanvas';
 import styles from './Aura.module.css';
 
 const PLANNED = [
-  'Explain Indian law in plain language',
+  'Explain Indian law in plain, everyday language',
   'Answer in English, Hindi and regional languages',
   'Help draft notices, complaints and RTI applications',
-  'Know its limits — and point you to a lawyer when you need one',
+  'Know its limits, and point you to a lawyer when you need one',
 ];
 
 const QUESTION = 'My landlord hasn’t returned my security deposit after I moved out. What can I do?';
 const ANSWER =
-  'You can start with a written notice asking for the deposit back by a specific date. Keep your rent agreement, payment receipts and move-out records ready — they matter if you need to take it further. I can help you draft the notice now.';
+  'You can begin with a written notice asking for the deposit back by a specific date. Keep your rent agreement, payment receipts and any records from the day you moved out close at hand, because they matter if you need to take it further. I can help you draft the notice now.';
 
-const FOLLOW = `mailto:${env.contactEmail}?subject=${encodeURIComponent('AURA — keep me posted')}`;
+const FOLLOW = `mailto:${env.contactEmail}?subject=${encodeURIComponent('Keep me posted on AURA')}`;
 
 export function Aura() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -138,7 +138,7 @@ export function Aura() {
           onPointerEnter={() => (hovering.current = true)}
           onPointerLeave={() => (hovering.current = false)}
         >
-          <div ref={orbRef} className={styles.orb} role="img" aria-label="AURA's orb — a sphere of moving blue light" />
+          <div ref={orbRef} className={styles.orb} role="img" aria-label="AURA's orb, a sphere of moving blue light" />
           <p className={styles.orbMeta} aria-hidden="true">
             <span>AURA</span>
             <span data-phase={phase}>
@@ -154,7 +154,7 @@ export function Aura() {
             <span>Developments</span>
           </p>
           <div className={styles.tags} data-reveal="up">
-            <span className={styles.tag}>Public-interest project</span>
+            <span className={styles.tag}>Public interest project</span>
             <span className={`${styles.tag} ${styles.live}`}>
               <i aria-hidden="true" /> In development
             </span>
@@ -169,7 +169,8 @@ export function Aura() {
           </h2>
           <p className={`${styles.lead} t-lead`} data-reveal="up">
             An AI legal assistant for India. AURA is being built to help anyone understand their rights, make sense of
-            legal documents and take the right next step — in the language they are most comfortable with.
+            legal documents and take the right next step, in the language they are most comfortable with. Knowing
+            where you stand should not depend on who you know or what you can afford.
           </p>
 
           <div className={styles.planned} data-reveal="up">
@@ -207,7 +208,7 @@ export function Aura() {
               {phase === 'thinking' && <span className={styles.typing} aria-hidden="true" />}
             </p>
           </div>
-          <p className={styles.chatNote}>Illustrative preview — AURA is in development.</p>
+          <p className={styles.chatNote}>Illustrative preview. AURA is still in development.</p>
         </div>
       </div>
     </section>

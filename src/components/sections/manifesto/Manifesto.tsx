@@ -12,22 +12,22 @@ import { gsap, useGSAP } from '@/lib/gsap';
 import styles from './Manifesto.module.css';
 
 const STATEMENT =
-  'GA Automations is a young, ambitious technology company. We combine AI, automation, custom-coded websites, software and integrations into intelligent systems — so the repetitive work disappears, and your team spends its time on what only people can do.';
+  'GA Automations is a young and ambitious technology company. We bring together artificial intelligence, automation, websites coded by hand, custom software and integrations, and shape them into intelligent systems built around the way you already work. The repetitive work disappears. Your data finally agrees with itself. And your team gets its time back for the things only people can do: the conversations, the judgement calls, the ideas.';
 
 const PARTS = ['AI', 'Automation', 'Websites', 'Software', 'Integrations'];
 
 const PRINCIPLES = [
   {
     title: 'Systems, not pages',
-    text: 'We design how work flows through your business, then build the pieces that make it run.',
+    text: 'We design how work should flow through your business first, then build every piece that makes it run.',
   },
   {
     title: 'Automation with judgement',
-    text: 'People stay in the loop where it matters. Everything else just happens.',
+    text: 'People stay in the loop wherever it truly matters. Everything else simply happens, reliably and on time.',
   },
   {
     title: 'Built to be yours',
-    text: 'Clear code, documented workflows and tools you own — no black boxes.',
+    text: 'Clear code, documented workflows and tools you own outright. No black boxes, and no strings attached.',
   },
 ];
 

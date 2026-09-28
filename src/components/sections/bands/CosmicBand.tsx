@@ -68,8 +68,8 @@ export function CosmicBand() {
           </span>
         </h2>
         <p className={`${styles.support} t-lead`} data-reveal="up">
-          Scattered signals — messages, records, decisions — connected until they behave like one mind. That is the
-          work.
+          Scattered signals, from messages and records to everyday decisions, connected until they behave like a single
+          mind. That connection is the work we do.
         </p>
       </div>
       <p className={styles.metaLeft} aria-hidden="true">

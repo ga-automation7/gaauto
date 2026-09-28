@@ -57,7 +57,7 @@ export function WhatWeBuild() {
             kicker="What we build"
             bold="Six ways"
             serif="to work smarter"
-            lead="Each capability stands on its own — and they are strongest wired together into one system."
+            lead="Each capability stands on its own. Wired together into one system, every one of them makes the others stronger."
           />
         </div>
 

@@ -183,7 +183,7 @@ export function Transformation() {
               kicker="The transformation"
               bold="Intelligence"
               serif="at work"
-              lead="Capability only matters once it is wired into how your business runs. This is the part we build."
+              lead="Capability only matters once it is wired into the way your business runs. That wiring is the part we build."
             />
             <ol className={styles.phases}>
               {transformationPhases.map((p, i) => (

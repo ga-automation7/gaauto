@@ -9,7 +9,7 @@ export const site = {
   tagline: 'We build intelligent systems.',
   philosophy: ["We don't just build websites.", 'We build intelligent systems.'],
   description:
-    'GA Automations builds AI automation, AI agents, custom-coded websites and business workflow systems that replace repetitive manual work with intelligent digital systems.',
+    'GA Automations builds AI automation, AI agents, websites coded by hand and business workflow systems that replace repetitive manual work with intelligent digital systems.',
   contact: {
     email: env.contactEmail,
     whatsapp: env.whatsappNumber ? `https://wa.me/${env.whatsappNumber}` : null,

@@ -66,7 +66,7 @@ export function OrbitBand() {
           </span>
         </h2>
         <p className={`${styles.support} t-lead`} data-reveal="up">
-          Six capabilities, each complete on its own — strongest when they turn around the same core.
+          Six capabilities, each complete on its own, and at their strongest when they turn around the same core.
         </p>
       </div>
     </section>

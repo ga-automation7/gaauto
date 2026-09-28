@@ -90,7 +90,7 @@ function CinematicFilm({ children }: { children: ReactNode }) {
         id="film"
         className={styles.track}
         style={{ ['--film-length' as string]: chapters.total }}
-        aria-label="GA Automations — an opening film: from a human eye, a drone flight through a city of light that dissolves into energy and becomes a six-armed intelligence representing our six capabilities."
+        aria-label="GA Automations, an opening film. A human eye opens onto a drone flight through a city of light, which dissolves into energy and becomes an intelligence with six arms, one for each of our capabilities."
       >
         <div ref={probeRef} className={styles.probe} aria-hidden="true" />
         {chapters.list.map((c) => (
