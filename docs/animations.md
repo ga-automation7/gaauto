@@ -18,48 +18,81 @@ momentum on touch devices.
 with `useStageScene(id, builder)`:
 
 ```ts
-useStageScene('city', (tl, { chapters: ch }) => {
-  tl.fromTo(camera.state, { zoom: 3.1 }, { zoom: 1.1, ease: 'surface', duration: 1.3 }, ch.at('city'));
-  return { start: ch.at('iris', 1.4), end: ch.frac('ascension', 0.74), onActive, render };
+useStageScene('film', (tl, { chapters: ch }) => {
+  tl.fromTo(fx, { lights: 0 }, { lights: 1, duration: ch.seq(0.69) - ch.seq(0.59) }, ch.seq(0.59));
+  return { start: ch.spans.iris.end - 0.16, end: ch.seq(0.92), onActive, render };
 });
 ```
 
-- The timeline's time axis **is** the stage position — a tween placed at `ch.frac('city', 0.5)` plays halfway through
-  the city chapter.
+- The timeline's time axis **is** the stage position — a tween placed at `ch.frac('capabilities', 0.5)` plays halfway
+  through that chapter; `ch.seq(t)` addresses the signature sequence (city → reveal) as a fraction.
 - Only scenes whose `[start, end]` contains the position are updated; each gets one final update when it leaves, so it
   settles on its boundary state. Per-frame cost stays flat however long the film is.
 - `onActive` toggles visibility and starts/stops the scene's render loop. `onPreload` fires a few viewports early for
-  heavy media. `render` runs after the timeline each scroll frame (used for video scrubbing).
+  heavy media. `render` runs after the timeline each scroll frame (the film uses it to move the footage's playhead).
 
-Chapters and their lengths: `src/config/cinematic.ts` (separate mobile lengths).
+Chapters and their lengths: `src/config/cinematic.ts` (separate mobile lengths). The signature sequence is split
+exactly as briefed: 0–15 % city · 15–30 % THE WORLD IS MOVING · 30–45 % FASTER / EVERY DAY · 45–60 % AI ISN'T COMING /
+IT'S ALREADY HERE · 60–75 % city → energy (THE QUESTION IS / WHAT WILL YOU BUILD WITH IT?) · 75–90 % the being emerges ·
+90–100 % GA AUTOMATIONS.
 
 ## Cameras
 
-`SceneCamera` (`src/lib/camera.ts`) moves a "plate" (image, video, or WebGL-rendered artwork) laid out at cover size:
-`focus (x, y)`, `zoom`, `rotate`, plus an additive `offset` for handheld/pointer parallax and a per-layout `zoomBase`.
-Everything inside the plate element (SVG traces, halos, markers in %) follows automatically; canvases and shaders use the
-same maths via `camera.project()` / `camera.focus` so overlays stay locked to the artwork at any size.
+`SceneCamera` (`src/lib/camera.ts`) moves a "plate" (image or WebGL-rendered artwork) laid out at cover size:
+`focus (x, y)`, `zoom`, `rotate`, plus an additive `offset` for handheld/pointer parallax. The plate always covers the
+frame (edges clamped) — the cosmic scene is never letterboxed. Everything inside the plate element (SVG traces, halos,
+markers in %) follows automatically; canvases and shaders use the same maths via `camera.project()` / `camera.focus`.
+
+The cosmic camera **tracks the face** whenever it is in view (emergence, GA reveal, finale): the face is centred and its
+eyes held near the upper third, targets pre-clamped to the plate so the camera never stalls against an edge, with a slow
+organic float on top. In the capabilities chapter it flies to each hand (object on one third, panel on the other; on
+phones the hand sits above the docked panel).
 
 **Perceptual zoom:** camera dives use `expoZoom(from, to)` so every slice of scroll multiplies the zoom by the same
 factor — constant perceived speed, no lurch.
 
-## Scenes
+## The film (02)
 
-| Scene       | Technique                                                                                                                                                                                                                                                                                                                                                          |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Eye (01)    | CSS-transformed plate · WebGL2 `HeroRenderer`: instanced capsule particles (dust + iris glints) whose streak length follows speed, and a tunnel shader that samples the iris texture in polar coordinates (amber → machine blue) · iris-locked split lockup                                                                                                        |
-| City (02)   | Drone-shot camera over the plate · three parallax haze layers · `NeuralField` canvas wakes the real lights (nodes detected from the artwork) · dive into the core ring with a bloom. With a scrubbed drone video the footage carries the motion, the light layer is off and the camera only makes the final dive (to `video.focus`)                                |
-| Cosmic (03) | WebGL2 `CosmicRenderer` cinemagraph: breathing torso, cosmic wind on robe/hair, energy pulses through veins, twinkling stars, drifting nebula and motes, god-rays, breathing aura, burning eyes; bicubic sampling when magnified · SVG arm traces (DrawSVG) · hand halos · per-hand camera flights with docked capability cards and leader lines · identity reveal |
+- **Footage** — a frame sequence (`src/lib/video/FrameSequence.ts`): downloaded coarse → fine after the first screen has
+  settled (every 64th frame, then 32nd … all), frames ahead of the playhead first; only a window around the playhead is
+  decoded (`createImageBitmap`, off the main thread) and released behind it. The picture never blanks — the nearest
+  decoded frame stands in.
+- **Motion-compensated blending** — `FilmCompositor` (`src/lib/webgl/FilmCompositor.ts`) draws two neighbouring frames,
+  each warped part-way toward the other along the camera motion measured offline (zoom + shift per frame pair), so a slow
+  scroll glides between frames instead of cross-dissolving.
+- **The transformation** (same pass, scrubbed): lights brighten and blur into abstraction → violet-blue fog creeps in
+  from the edges → motes stream past → lights stretch into trails → the architecture melts into its own light and then
+  into dark cosmic energy (crisp electric arcs, endless forward motion) → the energy gathers into the being's silhouette
+  (its mask mapped through the cosmic camera) → the being forms from the heart outward and the compositor turns
+  transparent over the living render. No cut, no flash, no white frame.
+- **Words** — `ui/FilmTitles.tsx`: masked, blur-to-sharp line reveals with a slight drift; FASTER. rushes in stretched.
+  `ui/BrandReveal.tsx`: GA AUTOMATIONS condenses letter by letter out of the energy.
+- **Fallback** — without WebGL2 the frames are drawn on a 2D canvas and layered atmosphere carries the transformation.
+
+## Other scenes
+
+| Scene       | Technique                                                                                                                                                                                                                                  |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Eye (01)    | CSS-transformed plate · WebGL2 `HeroRenderer`: instanced capsule particles whose streak length follows speed, and a tunnel shader that samples the iris texture in polar coordinates (amber → machine blue) · iris-locked split lockup     |
+| Cosmic (03) | WebGL2 `CosmicRenderer` cinemagraph: breathing torso, heartbeat pulsing through veins, cosmic wind on robe/hair, twinkling stars, nebula, god-rays, breathing aura, burning eyes; bicubic sampling when magnified · SVG arm traces · halos |
+| Identity    | The heart releases its light (burst + anamorphic flare) and GA AUTOMATIONS pops out letter by letter, a sheen crosses it, a halo keeps breathing; the being dissolves into the page's own atmosphere                                       |
+
+## Sound
+
+`src/lib/audio/Soundscape.ts` — an original score synthesised with Web Audio (drone, a D minor 9 pad that opens into
+D major 9 as the being appears, shimmer, scroll-reactive air, a heartbeat in phase with the being's). Loaded as its own
+chunk on the first click of the **Sound** toggle (`components/layout/SoundToggle.tsx`); never plays by itself; follows
+the film's position; suspends with the tab.
 
 ## Other sections
 
-- **Transformation** — sticky stage, one scrubbed timeline (particles → lattice → workflow → system), MotionPath
-  pulses, event log. Plays once on small screens.
+- **Transformation** — sticky stage (desktop), one scrubbed timeline: capability cards → network → workflow → system,
+  with MotionPath pulses and the event log. Plays once on small screens.
 - **Use cases** — horizontal track driven by vertical scroll (desktop), native swipe with snap (touch).
-- **Work** — clip-path reveal + inner parallax, scrubbed.
-- **About** — word-by-word highlight, scrubbed.
-- **Playground** — `CityRenderer` with an orbit camera (drag / arrow keys, inertia, idle orbit); renders only while
-  visible. The renderer is its own chunk, imported as the section approaches, then pre-warmed.
+- **Event horizon** — ray-traced black hole (`BlackHoleRenderer`, its own chunk, async shader compile); scroll is the
+  camera falling toward the horizon.
+- **Atmosphere** — one fixed layer (`AmbientCosmos`: violet fog + motes + the rare shooting star) behind every section
+  after the film; marquee bands and orbit dials add rhythm.
 
 ## Reduced motion
 
@@ -69,25 +102,20 @@ immediately, CSS animations are neutralised.
 
 ## Performance rules
 
-- Only `transform` and `opacity` animate on large layers; no animated filters or blurs; `backdrop-filter` is not used over
-  moving content.
-- Full-screen layers that a timeline fades or scales every frame (blooms, flashes, shades, vignettes, the heart) carry
-  `will-change: opacity` / `transform`, so the compositor animates them without re-painting a screen-sized gradient.
-- Scene hand-offs happen under full bloom and overlap as briefly as possible: two scenes at full cost at once is the
-  most expensive moment of the film.
-- A canvas with nothing to draw is left alone (clearing it again still re-uploads the layer).
+- Only `transform` and `opacity` animate on large layers; blur filters animate only on type, briefly, while scrubbed.
+- Full-screen layers a timeline fades every frame carry `will-change`.
+- The entity is not rendered while the film's energy fully covers it (`shared.filmCovers`).
 - No layout reads in frame loops — sizes are measured on resize only (`size` store / ResizeObserver).
-- Render loops run only while their scene/section is active or visible.
-- Canvases are capped by device tier (`src/lib/device.ts`): DPR, particle counts, render scale, city density.
-- Shaders are pre-warmed (one off-screen frame) so compilation never lands on a scroll frame.
+- Render loops run only while their scene/section is active or visible; the marquee only while on screen.
+- Canvases are capped by device tier (`src/lib/device.ts`): DPR, particle counts, render scale, streak taps; the film
+  canvas never exceeds ~1.9 MP (the footage is 720p).
+- Frame sequence: Save-Data downloads every 4th frame, low-tier devices every 2nd.
 - WebGL canvases are created fresh per mount (a remount never inherits a lost context).
-- GPU-heavy textures (2× cosmic plate) are desktop-only.
 
-Measured on the development machine (Intel i3-7100, HD Graphics 630), production build, scrolling the whole film
-(eye → city → cosmic → six hands → identity) continuously in ~19 s: ≈ 59.6–59.8 fps average, 99th-percentile frame
-16.9 ms, at most a few single missed frames per pass. Interactive 3D city ≈ 58–60 fps.
+Measured (production build, headless Chromium on the development machine), scrolling the whole film continuously:
+≈ 56 fps average; the heaviest moments (the being forming beneath the energy, the finale) ≈ 47–50 fps.
 
 ## Debugging
 
-`?debug` exposes `window.__lenis`, `window.__eye` (fx state, camera) and `window.__cosmic` (camera) so positions can be
-inspected or set by hand, e.g. `__lenis.scrollTo(innerHeight * 5.4, { immediate: true })`.
+`?debug` exposes `window.__lenis`, `window.__eye`, `window.__cosmic` (camera) and `window.__sound`, e.g.
+`__lenis.scrollTo(innerHeight * 12, { immediate: true })`.

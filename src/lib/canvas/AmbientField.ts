@@ -2,7 +2,8 @@
  * AmbientField — the quiet life behind every section after the film:
  * a few dozen soft blue motes at three depths, drifting slowly and shifting
  * with scroll (nearer motes move more), and every few seconds a tiny light
- * pulse somewhere in the dark. Never an explosion — atmosphere, not effect.
+ * pulse somewhere in the dark; very rarely a shooting star crosses the sky.
+ * Never an explosion — atmosphere, not effect.
  *
  * Canvas 2D with pre-rendered sprites (one drawImage per mote).
  */
@@ -21,6 +22,17 @@ interface Pulse {
   y: number;
   age: number;
 }
+
+interface Meteor {
+  x: number;
+  y: number;
+  /** Direction of travel (unit vector, screen space). */
+  dx: number;
+  dy: number;
+  age: number;
+}
+
+const METEOR_LIFE = 1.1;
 
 function sprite(radius: number, rgb: string): HTMLCanvasElement {
   const c = document.createElement('canvas');
@@ -47,6 +59,8 @@ export class AmbientField {
   private width = 1;
   private height = 1;
   private nextPulse = 2;
+  private readonly meteors: Meteor[] = [];
+  private nextMeteor = 7;
   private seed = 3;
 
   constructor(canvas: HTMLCanvasElement, opts: { dpr: number; count: number }) {
@@ -126,6 +140,47 @@ export class AmbientField {
       ctx.globalAlpha = Math.sin(t * Math.PI) * 0.4;
       ctx.drawImage(this.blue, p.x * w - size, p.y * h - size, size * 2, size * 2);
     }
+
+    // A shooting star, every 10–20 s: a thin streak with a bright head, gone in a second.
+    this.nextMeteor -= step;
+    if (this.nextMeteor <= 0) {
+      const a = (this.rand() < 0.5 ? 0.18 : Math.PI - 0.18) + (this.rand() - 0.5) * 0.3;
+      this.meteors.push({
+        x: 0.15 + this.rand() * 0.7,
+        y: 0.04 + this.rand() * 0.3,
+        dx: Math.cos(a),
+        dy: Math.sin(a),
+        age: 0,
+      });
+      this.nextMeteor = 10 + this.rand() * 10;
+    }
+    for (let i = this.meteors.length - 1; i >= 0; i--) {
+      const m = this.meteors[i]!;
+      m.age += step;
+      const t = m.age / METEOR_LIFE;
+      if (t >= 1) {
+        this.meteors.splice(i, 1);
+        continue;
+      }
+      const travel = Math.min(w, h) * 0.55 * t;
+      const hx = m.x * w + m.dx * travel;
+      const hy = m.y * h + m.dy * travel;
+      const len = Math.min(w, h) * 0.16 * Math.sin(t * Math.PI);
+      const fade = Math.sin(t * Math.PI);
+      const grad = ctx.createLinearGradient(hx, hy, hx - m.dx * len, hy - m.dy * len);
+      grad.addColorStop(0, `rgba(230, 236, 255, ${0.85 * fade})`);
+      grad.addColorStop(1, 'rgba(160, 170, 255, 0)');
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.3;
+      ctx.beginPath();
+      ctx.moveTo(hx, hy);
+      ctx.lineTo(hx - m.dx * len, hy - m.dy * len);
+      ctx.stroke();
+      ctx.globalAlpha = 0.7 * fade;
+      ctx.drawImage(this.blue, hx - 7, hy - 7, 14, 14);
+    }
+
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = 'source-over';
   }

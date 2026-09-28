@@ -27,12 +27,12 @@ const IMG_DIR = path.join(ROOT, 'public/assets/images');
 const META_FILE = path.join(ROOT, 'src/data/generated/media-meta.json');
 
 /** Reference files are matched by numeric prefix so odd extensions (e.g. `.png.png`) still work. */
-const SOURCES = { eye: '01-', city: '02-', cosmic: '03-' };
+// (02- is the original city still — the film now uses the drone footage instead: scripts/extract-frames.mjs.)
+const SOURCES = { eye: '01-', cosmic: '03-' };
 
 /** Primary cinematic plates. `lite` is served to low-tier devices / Save-Data. */
 const PLATES = [
   { id: 'heroEye', source: 'eye', dir: 'hero', name: 'eye', liteWidth: 960 },
-  { id: 'city', source: 'city', dir: 'city', name: 'city', liteWidth: 1080 },
 ];
 
 const AVIF = { quality: 52, effort: 5, chromaSubsampling: '4:2:0' };

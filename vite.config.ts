@@ -49,8 +49,8 @@ export default defineConfig({
     rolldownOptions: {
       output: {
         // Libraries (React, GSAP, Lenis) change rarely: their own chunk stays
-        // cached across content deploys. The 3D city is split on its own via
-        // a dynamic import in the playground.
+        // cached across content deploys. The black-hole renderer and the
+        // soundscape are split on their own via dynamic imports.
         codeSplitting: {
           groups: [{ name: 'vendor', test: /node_modules/ }],
         },

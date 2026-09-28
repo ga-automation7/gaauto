@@ -17,7 +17,8 @@
     "assets:images": "node scripts/optimize-images.mjs",
     "assets:video": "node scripts/process-video.mjs",
     "check": "npm run typecheck && npm run lint && npm run build",
-    "assets:textures": "node scripts/generate-textures.mjs"
+    "assets:textures": "node scripts/generate-textures.mjs",
+    "assets:frames": "node scripts/extract-frames.mjs"
   },
   "dependencies": {
     "@fontsource-variable/cormorant": "^5.3.0",

@@ -58,14 +58,14 @@ export function CinematicStatic() {
         <Plate asset={media.film} />
         <div className={styles.shade} />
         <div className={`container ${styles.caption}`}>
-          <p className="t-kicker">GA Automations</p>
+          <p className="t-kicker">The world is moving — faster, every day</p>
           <h2 id="static-city" className={styles.lockupStart}>
-            <span className={styles.bold}>Work that</span>
-            <span className={styles.serif}>runs itself</span>
+            <span className={styles.bold}>AI isn&rsquo;t coming.</span>
+            <span className={styles.serif}>It&rsquo;s already here.</span>
           </h2>
           <p className={`${styles.support} t-lead`}>
-            Like this city, a business can run on intelligence. We build the AI that captures leads, answers
-            customers and moves work forward — day and night.
+            The question is: what will you build with it? GA Automations builds intelligent systems — AI
+            automation, AI systems, intelligent web and workflow engineering — built for what&rsquo;s next.
           </p>
         </div>
       </section>

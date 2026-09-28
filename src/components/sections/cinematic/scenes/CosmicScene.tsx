@@ -1,14 +1,18 @@
 /**
- * 03 — INTELLIGENCE → CAPABILITIES → IDENTITY
+ * 03 — EMERGENCE → REVEAL → INTELLIGENCE → CAPABILITIES → IDENTITY
  *
- * The flight's light condenses into the heart of a six-armed cosmic
- * intelligence. The camera never stops moving forward: the vast entity grows
- * slowly out of the clearing light, blazes, settles into its living glow, its
- * eyes ignite (the eye again — the film's first image) and energy races down
- * all six arms.
- * Each arm carries one GA Automations capability: scrolling steps through
- * them, the camera leaning toward each hand as its panel docks alongside.
- * Finally every arm returns its energy to the core and the identity appears.
+ * The film's energy gathers into a six-armed cosmic intelligence (the
+ * FilmCompositor forms it over this render, from the heart outward). The camera
+ * never stops moving forward: it glides in on the being's FACE — the eyes
+ * ignite (the eye again, the film's first image) — and holds it as the focal
+ * point while GA AUTOMATIONS appears beneath. It eases back to show all six
+ * arms, then flies to each hand in turn (one GA Automations capability per
+ * hand), and finally returns to the face as every arm gives its energy back to
+ * the heart and the identity resolves.
+ *
+ * Framing: the plate always covers the frame (never letterboxed), and every
+ * target is clamped to the plate before it is tweened, so the camera glides
+ * continuously and never stalls against an edge.
  */
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { PlateMedia, type PlateMediaHandle } from '@/components/common/PlateMedia';
@@ -24,6 +28,7 @@ import { byTier } from '@/lib/device';
 import { debug } from '@/lib/debug';
 import { CosmicRenderer } from '@/lib/webgl/CosmicRenderer';
 import { CapabilityHUD, type CapabilityHUDHandle } from '../ui/CapabilityHUD';
+import { BrandReveal } from '../ui/BrandReveal';
 import { IdentityReveal } from '../ui/IdentityReveal';
 import { StageCaption } from '../ui/StageCaption';
 import { useFilmMode } from '../filmState';
@@ -34,6 +39,8 @@ const COSMIC = media.cosmicEntity;
 const { core, eyes, arms } = COSMIC.anchors;
 const PW = COSMIC.width;
 const PH = COSMIC.height;
+/** Between the eyes — what the camera frames whenever the face is in view. */
+const FACE = { x: (eyes[0].x + eyes[1].x) / 2, y: (eyes[0].y + eyes[1].y) / 2 };
 
 const services = content.services();
 /** Services ordered by the hand that carries them. */
@@ -44,7 +51,6 @@ export function CosmicScene() {
   const layerRef = useRef<HTMLDivElement>(null);
   const plateRef = useRef<HTMLDivElement>(null);
   const coreRef = useRef<HTMLDivElement>(null);
-  const rushRef = useRef<HTMLDivElement>(null);
   const glHostRef = useRef<HTMLDivElement>(null);
   const coreBreathRef = useRef<HTMLSpanElement>(null);
   const rendererRef = useRef<CosmicRenderer | null>(null);
@@ -60,12 +66,8 @@ export function CosmicScene() {
   const mediaRef = useRef<PlateMediaHandle>(null);
   const [active, setActive] = useState(-1);
   const activeRef = useRef(-1);
-  const portrait = useRef(false);
 
-  const camera = useMemo(
-    () => new SceneCamera(PW, PH, { clamp: !device.isMobile, initial: { x: core.x, y: core.y, zoom: 1.75 } }),
-    [device.isMobile],
-  );
+  const camera = useMemo(() => new SceneCamera(PW, PH, { initial: { x: FACE.x, y: 0.4, zoom: 1.3 } }), []);
   const armPaths = useMemo(() => arms.map((pts) => smoothPath(pts, PW, PH, 0.55)), []);
   const handPoint = (i: number) => arms[i]![arms[i]!.length - 1]!;
 
@@ -78,7 +80,7 @@ export function CosmicScene() {
   }, [camera, shared]);
 
   // The living entity (WebGL). Falls back to the still plate + DOM overlays.
-  const renderScale = byTier({ high: 1, medium: device.isMobile ? 0.75 : 0.85, low: 0.7 });
+  const renderScale = byTier({ high: 1, medium: device.isMobile ? 0.8 : 0.85, low: 0.7 });
   useEffect(() => {
     const host = glHostRef.current;
     if (!host || !device.webgl2) return;
@@ -88,8 +90,9 @@ export function CosmicScene() {
     host.appendChild(canvas);
     let renderer: CosmicRenderer | null = null;
     try {
-      // Desktop GPUs get the 2× upscaled plate so close camera moves stay crisp.
-      const hiRes = !device.isMobile && device.tier !== 'low';
+      // The 2× plate keeps the face sharp in close-up — on phones too (a portrait
+      // close-up magnifies the plate even more than a desktop one).
+      const hiRes = device.tier !== 'low';
       renderer = new CosmicRenderer(
         canvas,
         hiRes ? '/assets/images/cosmic/cosmic-entity@2x.webp' : COSMIC.image.webp,
@@ -119,16 +122,7 @@ export function CosmicScene() {
         if (!plate) return;
         rendererRef.current?.resize(width, height, renderScale);
         setAspectKey(Math.round((width / height) * 4));
-        portrait.current = width / height < 1.1;
         camera.resize(width, height);
-        // Portrait: pull back so a hand + its object fill the width; the camera pans hand to hand.
-        camera.zoomBase = portrait.current ? Math.min(1, width / camera.W / 0.46) : 1;
-        // The rush flies outward from the heart (as framed at the reveal).
-        if (rushRef.current) {
-          const hx = width / 2 + (core.x - 0.5) * camera.W * camera.zoomBase;
-          const hy = height / 2 + (core.y - 0.5) * camera.H * camera.zoomBase;
-          rushRef.current.style.transformOrigin = `${hx.toFixed(1)}px ${hy.toFixed(1)}px`;
-        }
         camera.layout(plate);
         camera.apply(plate);
         hudRef.current?.layout();
@@ -139,9 +133,13 @@ export function CosmicScene() {
   const ticker = useTicker((time, dt) => {
     const plate = plateRef.current;
     if (!plate) return;
-    const k = Math.min(1, dt * 2);
-    camera.offset.x += (pointer.x * 0.007 - camera.offset.x) * k;
-    camera.offset.y += (pointer.y * 0.005 - camera.offset.y) * k;
+    // A slow, organic float on top of the choreography (a camera operator's breath,
+    // never stabiliser jitter), plus a hair of pointer parallax.
+    const k = Math.min(1, dt * 1.6);
+    const floatX = Math.sin(time * 0.23) * 0.0016 + Math.sin(time * 0.071 + 1.3) * 0.0011;
+    const floatY = Math.cos(time * 0.19) * 0.0012;
+    camera.offset.x += (pointer.x * 0.005 + floatX - camera.offset.x) * k;
+    camera.offset.y += (pointer.y * 0.0035 + floatY - camera.offset.y) * k;
     camera.apply(plate);
 
     // One breath every 6.5 s — body, heart and aura breathe together.
@@ -149,7 +147,7 @@ export function CosmicScene() {
     if (coreBreathRef.current)
       coreBreathRef.current.style.transform = `scale(${(0.92 + breath * 0.2).toFixed(3)})`;
     const r = rendererRef.current;
-    if (r?.ready) {
+    if (r?.ready && !shared.filmCovers) {
       const focus = camera.focus;
       r.render(time, {
         centerX: camera.vw / 2,
@@ -184,108 +182,116 @@ export function CosmicScene() {
       const K = ch.spans.capabilities;
       const Y = ch.spans.identity;
       const layer = layerRef.current!;
-      const plate = plateRef.current!;
       const armGroups = [...(tracesRef.current?.querySelectorAll<SVGGElement>('[data-arm]') ?? [])];
       const drawn = (i: number) => [...armGroups[i]!.querySelectorAll<SVGPathElement>('[data-draw]')];
       const allDrawn = armGroups.flatMap((_, i) => drawn(i));
       const halos = [...(halosRef.current?.querySelectorAll<HTMLElement>('[data-halo]') ?? [])];
-      const T = ch.spans.transition;
-      const baked = mode === 'baked';
-      // The moment the entity takes the screen: under the light's peak, or — baked — as the footage ends.
-      const handoff = baked ? T.end : ch.peak;
-      // Start rendering a little earlier, hidden beneath the light / the footage.
-      const start = handoff - (baked ? 0.3 : 0.32);
+      const E = ch.spans.emergence;
+      const R = ch.spans.reveal;
+      const S = ch.seq;
+      const gl = mode === 'gl';
       const step = K.length / CAPABILITY_STEPS;
+      const { width: vw, height: vh } = size.get();
+      const mobile = device.isMobile;
 
-      // ── The reveal: the camera keeps moving FORWARD ──────────────────
-      // The flight's momentum carries through the light. The entity is vast and
-      // far away, so it grows only slowly while the near atmosphere rushes past;
-      // everything decelerates together. No pull-back, no reversal.
+      // ── Framing helpers ───────────────────────────────────────────────
+      // Share of the plate visible at zoom 1 (cover fit), per axis.
+      const aspectV = vw / vh;
+      const aspectP = PW / PH;
+      const visW = Math.min(1, aspectV / aspectP);
+      const visH = Math.min(1, aspectP / aspectV);
+      const clampX = (x: number, z: number) => Math.min(1 - visW / (2 * z), Math.max(visW / (2 * z), x));
+      const clampY = (y: number, z: number) => Math.min(1 - visH / (2 * z), Math.max(visH / (2 * z), y));
+      /** The face centred horizontally, its eyes at `v` of the screen height (as close as the plate allows). */
+      const onFace = (zoom: number, v: number) => ({
+        x: clampX(FACE.x, zoom),
+        y: clampY(FACE.y - ((v - 0.5) * visH) / zoom, zoom),
+        zoom,
+      });
+
+      // ── Emergence: the being forms around the heart we were flying toward ──
+      // Hidden beneath the energy until it forms; the camera is already moving
+      // forward at the flight's pace, gliding in on the face.
+      const formFrom = gl ? S(0.72) : S(0.68);
+      const wide = onFace(mobile ? 1.24 : 1.3, 0.4);
+      const near = onFace(mobile ? 1.56 : 1.62, 0.38);
+      const close = onFace(mobile ? 1.72 : 1.8, 0.36);
+      tl.set(camera.state, { ...wide, rotate: 0 }, 0);
+      tl.fromTo(camera.state, wide, { ...near, ease: 'sine.out', duration: E.end - formFrom }, formFrom);
+      // Reveal: an extremely slow push while GA AUTOMATIONS appears beneath the face.
+      tl.to(camera.state, { ...close, ease: 'sine.inOut', duration: R.length + N.length * 0.2 }, E.end);
+
+      // The being blazes as it forms, then settles into its living glow.
       tl.fromTo(
-        camera.state,
-        { x: 0.5, y: 0.5, zoom: 1, rotate: baked ? 0 : 0.7 },
-        {
-          x: 0.5,
-          y: 0.47,
-          zoom: 1.05,
-          rotate: 0,
-          ease: baked ? 'sine.inOut' : 'power2.out',
-          duration: N.end - handoff,
-        },
-        handoff,
+        cfx,
+        { glow: gl ? 1.75 : 1.4 },
+        { glow: 1, ease: 'sine.out', duration: R.end - S(0.78) },
+        S(0.78),
       );
-      if (!baked) {
-        tl.fromTo(
-          rushRef.current,
-          { opacity: 0.9, scale: 1 },
-          { opacity: 0, scale: 2.6, ease: 'power2.out', duration: 1.05 },
-          handoff - 0.08,
-        );
-      }
-      // The light condenses into the heart; the whole being blazes, then settles to its living glow.
+      // The eyes ignite as the face forms.
+      tl.fromTo(cfx, { eyes: 0 }, { eyes: 1, ease: 'power2.out', duration: S(0.9) - S(0.83) }, S(0.83));
       tl.fromTo(
         coreRef.current,
         { opacity: 0, scale: 0.4 },
-        { opacity: 1, scale: 1, ease: 'power3.out', duration: 0.8 },
-        handoff - 0.05,
+        { opacity: 1, scale: 1, ease: 'power3.out', duration: 0.6 },
+        S(0.8),
       );
-      tl.fromTo(
-        cfx,
-        { glow: baked ? 1.35 : 2.4 },
-        { glow: 1, ease: 'power2.out', duration: N.start + N.length * 0.7 - handoff },
-        handoff,
-      );
-      // The eyes ignite as the light clears.
-      tl.fromTo(
-        cfx,
-        { eyes: 0 },
-        { eyes: 1, ease: 'power3.out', duration: N.length * 0.25 },
-        N.start + N.length * 0.12,
+
+      // ── Intelligence: ease back to show all six arms (the face still leads) ──
+      const whole = onFace(mobile ? 1.06 : 1.1, 0.3);
+      tl.to(
+        camera.state,
+        { ...whole, ease: 'sine.inOut', duration: N.length * 0.72 },
+        N.start + N.length * 0.2,
       );
 
       // Energy races down all six arms, halos flare, then settle to standby.
       armGroups.forEach((group, i) => {
-        const at = ch.frac('intelligence', 0.58) + i * 0.045;
+        const at = N.start + N.length * 0.42 + i * 0.045;
         tl.fromTo(
           drawn(i),
           { drawSVG: '0% 0%' },
-          { drawSVG: '0% 100%', ease: 'power2.inOut', duration: N.length * 0.28 },
+          { drawSVG: '0% 100%', ease: 'power2.inOut', duration: N.length * 0.3 },
           at,
         );
         // Opacity lives in a CSS variable so the active state (CSS) can override it cleanly.
-        tl.fromTo(group, { '--o': 1 }, { '--o': 0.3, duration: 0.25 }, at + N.length * 0.28);
+        tl.fromTo(group, { '--o': 1 }, { '--o': 0.3, duration: 0.25 }, at + N.length * 0.3);
         const halo = halos[i];
         if (halo) {
           tl.fromTo(
             halo,
             { autoAlpha: 0, scale: 0.4 },
             { autoAlpha: 1, scale: 1.25, ease: 'power2.out', duration: 0.18 },
-            at + N.length * 0.24,
+            at + N.length * 0.26,
           );
-          tl.to(halo, { scale: 1, opacity: 0.55, duration: 0.3 }, at + N.length * 0.24 + 0.18);
+          tl.to(halo, { scale: 1, opacity: 0.55, duration: 0.3 }, at + N.length * 0.26 + 0.18);
         }
       });
 
       // ── Capabilities: the camera flies to each hand ─────────────────
       // Desktop: the hand's object is framed on one third of the screen and the
-      // panel docks on the other. Between hands the camera eases out a little and
-      // sweeps across the entity to the next one.
-      const { width: vw, height: vh } = size.get();
-      const mobile = device.isMobile;
-      const ZOOM = mobile ? 1.45 : 2.1;
-      const TRAVEL_ZOOM = mobile ? 1.15 : 1.55;
-      // Visible width of the plate at zoom 1, as a fraction of the plate (cover-fit).
-      const coverW = Math.min(1, vw / vh / (PW / PH));
+      // panel docks on the other. Phones: the hand sits in the upper part of the
+      // frame, above the docked panel. Between hands the camera eases out a
+      // little and sweeps across the entity to the next one.
+      const ZOOM = mobile ? 1.5 : 2.1;
+      const TRAVEL_ZOOM = mobile ? 1.22 : 1.55;
       for (let s = 0; s < CAPABILITY_STEPS; s++) {
         const service = byHand[s];
         if (!service) continue;
         const hand = handPoint(service.visual.hand);
         const at = K.start + s * step;
         const leftHand = service.visual.hand % 2 === 0;
-        // Where the hand should sit on screen (fraction of width): opposite the panel.
-        const screenX = mobile ? 0.5 : leftHand ? 0.34 : 0.66;
-        const x = hand.x + (0.5 - screenX) * (coverW / ZOOM);
-        const y = mobile ? hand.y + 0.06 : hand.y + 0.05 / ZOOM;
+        let x: number;
+        let y: number;
+        if (mobile) {
+          x = clampX(hand.x, ZOOM);
+          y = clampY(hand.y + ((0.5 - 0.34) * visH) / ZOOM, ZOOM);
+        } else {
+          // Where the hand should sit on screen (fraction of width): opposite the panel.
+          const screenX = leftHand ? 0.34 : 0.66;
+          x = hand.x + (0.5 - screenX) * (visW / ZOOM);
+          y = hand.y + 0.05 / ZOOM;
+        }
         tl.to(camera.state, { x, y, ease: 'cinema', duration: step * 0.5 }, at);
         if (s === 0) {
           tl.to(camera.state, { zoom: ZOOM, ease: 'cinema', duration: step * 0.5 }, at);
@@ -295,26 +301,31 @@ export function CosmicScene() {
         }
       }
 
-      // ── Identity: energy returns to the heart; the entity recedes ────
+      // ── Identity: energy returns to the heart; the camera returns to the face ──
+      const finale = onFace(mobile ? 1.5 : 1.52, 0.33);
+      tl.to(camera.state, { ...finale, ease: 'cinema', duration: Y.length * 0.55 }, Y.start);
       tl.to(
         camera.state,
-        { x: 0.5, y: 0.44, zoom: mobile ? 0.9 : 0.96, ease: 'cinema', duration: Y.length * 0.5 },
-        Y.start,
+        { zoom: finale.zoom * 1.06, ease: 'sine.inOut', duration: Y.length * 0.45 },
+        Y.start + Y.length * 0.55,
       );
       tl.to(armGroups, { '--o': 1, '--flow': 1, duration: 0.2 }, Y.start);
       tl.to(halos, { opacity: 1, scale: 1.2, duration: 0.25 }, Y.start);
       // Energy returns to the heart: traces retract from the hands back to the core.
-      tl.to(allDrawn, { drawSVG: '0% 0%', ease: 'power2.in', duration: Y.length * 0.35 }, Y.start + 0.25);
-      tl.to(armGroups, { '--flow': 0, duration: 0.2 }, Y.start + 0.25 + Y.length * 0.3);
-      tl.to(halos, { autoAlpha: 0, scale: 0.3, ease: 'power2.in', duration: Y.length * 0.3 }, Y.start + 0.3);
+      tl.to(allDrawn, { drawSVG: '0% 0%', ease: 'power2.in', duration: Y.length * 0.32 }, Y.start + 0.25);
+      tl.to(armGroups, { '--flow': 0, duration: 0.2 }, Y.start + 0.25 + Y.length * 0.28);
+      tl.to(halos, { autoAlpha: 0, scale: 0.3, ease: 'power2.in', duration: Y.length * 0.28 }, Y.start + 0.3);
       tl.to(coreRef.current, { scale: 2.4, ease: 'power2.in', duration: Y.length * 0.35 }, Y.start + 0.25);
-      tl.to([plate, glHostRef.current], { opacity: 0.3, duration: Y.length * 0.4 }, Y.start + 0.2);
-      tl.to(
-        [plate, coreRef.current, glHostRef.current],
-        { opacity: 0, duration: Y.length * 0.3 },
-        Y.end - Y.length * 0.3,
-      );
+      // The heart flares as the energy arrives; then the being gives way to the page's own atmosphere.
+      tl.to(cfx, { glow: 1.7, ease: 'sine.in', duration: Y.length * 0.3 }, Y.start + 0.25);
+      tl.to(cfx, { glow: 1.2, ease: 'sine.out', duration: Y.length * 0.3 }, Y.start + 0.25 + Y.length * 0.3);
       tl.to(cfx, { eyes: 1.6, duration: 0.3 }, Y.start + 0.2);
+      tl.fromTo(
+        layer,
+        { opacity: 1 },
+        { opacity: 0, ease: 'sine.inOut', duration: Y.length * 0.42 },
+        Y.end - Y.length * 0.42,
+      );
 
       const group = tracesRef.current;
       const updateActive = (pos: number) => {
@@ -332,7 +343,7 @@ export function CosmicScene() {
       };
 
       return {
-        start,
+        start: formFrom - 0.05,
         end: director.total + 0.01,
         preload: 4,
         onPreload: () => mediaRef.current?.load(),
@@ -431,13 +442,12 @@ export function CosmicScene() {
         </div>
         <div className={styles.fog} aria-hidden="true" />
         <div className={styles.grade} aria-hidden="true" />
-        {/* The last of the atmosphere, rushing past as we come out of the light */}
-        <div ref={rushRef} className={styles.rush} aria-hidden="true" />
       </div>
 
+      <BrandReveal />
       <StageCaption
         id="intelligence"
-        from={N.start + N.length * 0.3}
+        from={N.start + N.length * 0.56}
         to={K.start + 0.3}
         kicker="Intelligence"
         bold="One intelligence"

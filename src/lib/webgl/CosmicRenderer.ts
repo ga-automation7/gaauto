@@ -286,9 +286,8 @@ void main() {
   // Highlights bloom: veins, held objects and eyes glow rather than merely shine.
   col += max(col - vec3(0.62), 0.0) * 0.35 * uLife;
 
-  // Outside the plate: the void (soft vertical fade for letterboxed framings).
-  float inside = step(0.0, uv.x) * step(uv.x, 1.0);
-  col *= inside * smoothstep(0.0, 0.07, uv.y) * smoothstep(1.0, 0.93, uv.y);
+  // Outside the plate: the void. (The camera always covers the frame, so this is never seen.)
+  col *= step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
   outColor = vec4(col, 1.0);
 }
 `;

@@ -18,7 +18,16 @@ interface StageCaptionProps {
  * Poster-style chapter caption: tracked kicker, heavy grotesk line, hairline
  * italic line, optional support copy. Entry/exit are scrubbed by scroll.
  */
-export function StageCaption({ id, from, to, kicker, bold, serif, support, placement = 'bottom-left' }: StageCaptionProps) {
+export function StageCaption({
+  id,
+  from,
+  to,
+  kicker,
+  bold,
+  serif,
+  support,
+  placement = 'bottom-left',
+}: StageCaptionProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const kickerRef = useRef<HTMLParagraphElement>(null);
   const boldRef = useRef<HTMLSpanElement>(null);
@@ -35,11 +44,31 @@ export function StageCaption({ id, from, to, kicker, bold, serif, support, place
       tl.set(root, { autoAlpha: 0 }, 0);
       tl.set(root, { autoAlpha: 1, y: 0 }, from);
       if (kickerRef.current)
-        tl.fromTo(kickerRef.current, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, ease: 'power2.out', duration: inDur * 0.8 }, from);
-      tl.fromTo(boldRef.current, { yPercent: 115 }, { yPercent: 0, ease: 'reveal', duration: inDur }, from + 0.03);
-      tl.fromTo(serifRef.current, { yPercent: 115 }, { yPercent: 0, ease: 'reveal', duration: inDur }, from + 0.1);
+        tl.fromTo(
+          kickerRef.current,
+          { autoAlpha: 0, y: 14 },
+          { autoAlpha: 1, y: 0, ease: 'power2.out', duration: inDur * 0.8 },
+          from,
+        );
+      tl.fromTo(
+        boldRef.current,
+        { yPercent: 115 },
+        { yPercent: 0, ease: 'reveal', duration: inDur },
+        from + 0.03,
+      );
+      tl.fromTo(
+        serifRef.current,
+        { yPercent: 115 },
+        { yPercent: 0, ease: 'reveal', duration: inDur },
+        from + 0.1,
+      );
       if (supportRef.current)
-        tl.fromTo(supportRef.current, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, ease: 'power2.out', duration: inDur * 0.8 }, from + 0.18);
+        tl.fromTo(
+          supportRef.current,
+          { autoAlpha: 0, y: 18 },
+          { autoAlpha: 1, y: 0, ease: 'power2.out', duration: inDur * 0.8 },
+          from + 0.18,
+        );
       tl.to(root, { autoAlpha: 0, y: -28, ease: 'power1.in', duration: to - outAt }, outAt);
       return { start: from - 0.05, end: to + 0.05 };
     },

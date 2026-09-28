@@ -4,7 +4,7 @@
  *   <section style="height: (film length + 1) viewports">   ← scroll track
  *     chapter anchors (#chapter-perception, #chapter-city, …)
  *     <div sticky 100lvh>                                    ← the screen
- *        scenes (eye, film, light bridge, cosmic) + stage UI
+ *        scenes (eye, film, cosmic) + stage UI
  *
  * A single ScrollTrigger converts scroll into a stage position (in viewport
  * heights) and hands it to the StageDirector, which drives only the scenes in
@@ -42,8 +42,8 @@ function CinematicFilm({ children }: { children: ReactNode }) {
       chapters,
       director,
       size: createSizeStore(),
-      shared: { cameras: {} },
-      film: createFilmStore(),
+      shared: { cameras: {}, filmCovers: false },
+      film: createFilmStore(device.webgl2 ? 'gl' : 'plain'),
     };
   }, []);
 
@@ -90,7 +90,7 @@ function CinematicFilm({ children }: { children: ReactNode }) {
         id="film"
         className={styles.track}
         style={{ ['--film-length' as string]: chapters.total }}
-        aria-label="GA Automations — an opening film: from a human eye, a flight through a city of light, into a six-armed intelligence representing our six capabilities."
+        aria-label="GA Automations — an opening film: from a human eye, a drone flight through a city of light that dissolves into energy and becomes a six-armed intelligence representing our six capabilities."
       >
         <div ref={probeRef} className={styles.probe} aria-hidden="true" />
         {chapters.list.map((c) => (

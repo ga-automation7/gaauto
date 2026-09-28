@@ -15,23 +15,25 @@ src/
   animations/        motion primitives (perceptual easing: exponential zoom, cruise)
   components/
     common/          PlateMedia (image/video plate), SectionHeading
-    layout/          SmoothScroll, Footer, Grain
+    layout/          SmoothScroll, AmbientCosmos (page atmosphere), SoundToggle, Footer, Grain
     navigation/      Header, MenuOverlay
     sections/        one folder per page section (see README page map)
       cinematic/     the opening film: stage, scenes, stage UI
-    ui/              Logo, CircleArrow, Glyph
+    ui/              Logo, CircleArrow, Glyph, EditorialCard, Marquee, OrbitDial
   config/            env, site, media manifest, cinematic chapters
-  data/              services, use cases, projects, technology, workflow (+ generated/)
+  data/              services, use cases, technology, workflow (+ generated/: media meta, film frames)
   hooks/             useStageScene, useTicker, useReveal, useMagnetic, usePointer, useMediaQuery
   lib/               gsap registration, smooth scroll, camera, director, device profile, loading, size store,
                      math, SVG paths, debug flag
-    canvas/          NeuralField (2D light layer over the city plate)
-    webgl/           HeroRenderer, CosmicRenderer, city/ (CityRenderer, layout, shaders)
+    audio/           Soundscape (the film's synthesised score)
+    canvas/          AmbientField, NeuralStars, OrbitSystem, AuraOrb (2D canvases)
+    video/           FrameSequence (the film's footage, scroll-scrubbed)
+    webgl/           HeroRenderer, FilmCompositor, CosmicRenderer, BlackHoleRenderer
   services/          content repository, contact, analytics, http — the backend boundary
   styles/            tokens, reset, typography, global, fonts
   types/             shared types
-public/assets/       references (originals), images (generated), video (drop-in slots), textures
-scripts/             asset pipeline (images, anchors, textures, video)
+public/assets/       references (originals), images (generated), video/city (the film's frame sequence), textures
+scripts/             asset pipeline (frames, images, textures, video loops)
 docs/
 ```
 
@@ -42,8 +44,9 @@ into a **stage position** measured in viewport heights and hands it to the `Stag
 ([animations.md](animations.md)). Scenes register timelines whose time axis _is_ the stage position. Chapter lengths live
 in `src/config/cinematic.ts` — re-timing the film is a config change.
 
-Scene order in `App.tsx` is back → front: `CosmicScene`, `CityScene`, `EyeScene`. Each later scene sits _beneath_ the
-scene that hands off to it, so transitions can reveal the next world through the previous one.
+Scene order in `App.tsx` is back → front: `CosmicScene`, `FilmScene`, `EyeScene`. Each later scene sits _beneath_ the
+scene that hands off to it, so transitions can reveal the next world through the previous one — the film's compositor
+turns transparent where the being forms, over the living render already running beneath it.
 
 With reduced motion, `CinematicStage` renders `CinematicStatic` instead: the same story as calm, static scenes.
 
@@ -51,13 +54,15 @@ With reduced motion, `CinematicStage` renders `CinematicStatic` instead: the sam
 
 - `vendor` chunk (React, GSAP, Lenis) — changes rarely, stays cached across content deploys.
 - `index` chunk — the site itself.
-- `CityRenderer` chunk — the playground's 3D city, imported only when the visitor approaches it.
+- `BlackHoleRenderer` chunk — imported as the event horizon approaches.
+- `Soundscape` chunk — imported on the first click of the Sound toggle.
+- The film's frames are static files in `public/assets/video/city/`, fetched after the first screen settles.
 - `public/assets/references` (the original artwork) is excluded from `dist` by a small plugin in `vite.config.ts`; only
   the optimised images ship.
 
 ## Data flow
 
-Components read content — services, use cases, projects, technology — through `src/services/content.ts`, never from the
+Components read content — services, use cases, technology — through `src/services/content.ts`, never from the
 data files directly. Moving it to a CMS or API later only changes that module. (`data/workflow.ts` is diagram geometry
 for the Transformation section, not content, and is imported by that section alone.)
 

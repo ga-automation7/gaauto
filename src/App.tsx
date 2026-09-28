@@ -2,16 +2,17 @@ import { AmbientCosmos } from '@/components/layout/AmbientCosmos';
 import { Footer } from '@/components/layout/Footer';
 import { Grain } from '@/components/layout/Grain';
 import { SmoothScroll } from '@/components/layout/SmoothScroll';
+import { SoundToggle } from '@/components/layout/SoundToggle';
 import { Header } from '@/components/navigation/Header';
 import { CosmicBand } from '@/components/sections/bands/CosmicBand';
 import { WhatWeBuild } from '@/components/sections/build/WhatWeBuild';
 import { Aura } from '@/components/sections/aura/Aura';
 import { OrbitBand } from '@/components/sections/bands/OrbitBand';
+import { Marquee } from '@/components/ui/Marquee';
 import { CinematicStage } from '@/components/sections/cinematic/CinematicStage';
 import { CosmicScene } from '@/components/sections/cinematic/scenes/CosmicScene';
 import { EyeScene } from '@/components/sections/cinematic/scenes/EyeScene';
 import { FilmScene } from '@/components/sections/cinematic/scenes/FilmScene';
-import { LightBridge } from '@/components/sections/cinematic/scenes/LightBridge';
 import { Journal } from '@/components/sections/journal/Journal';
 import { Manifesto } from '@/components/sections/manifesto/Manifesto';
 import { BlackHoleSpace } from '@/components/sections/space/BlackHoleSpace';
@@ -34,16 +35,17 @@ export function App() {
       </a>
       <AmbientCosmos />
       <Header />
+      <SoundToggle />
       <main id="main">
-        {/* 01–03: one continuous film. Back → front: each scene sits beneath the one that hands off to it;
-            the light bridge blends over both film and entity. */}
+        {/* 01–03: one continuous film. Back → front: each scene sits beneath the one that hands off to it
+            (the film's compositor forms the entity over the living render beneath it). */}
         <CinematicStage>
           <CosmicScene />
           <FilmScene />
-          <LightBridge />
           <EyeScene />
         </CinematicStage>
         <Manifesto />
+        <Marquee items={['AI Automation', 'AI Systems', 'Intelligent Web', 'Workflow Engineering']} />
         <Journal />
         <CosmicBand />
         <Transformation />
@@ -51,6 +53,10 @@ export function App() {
         <UseCases />
         <OrbitBand />
         <WhatWeBuild />
+        <Marquee
+          reverse
+          items={['Intelligent systems', 'Built for what’s next', 'Wired into your business']}
+        />
         <Aura />
         <BlackHoleSpace />
       </main>

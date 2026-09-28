@@ -9,8 +9,9 @@
  *  Replacing / adding assets (full guide: docs/assets.md)
  *   • Still image → drop into /public/assets/references with the same prefix,
  *     run `npm run assets:images`.
- *   • The film → encode the footage (`npm run assets:video -- … --scrub`) and
- *     fill in `media.film.footage` (an example is commented in place).
+ *   • The film → put the master clip in /media-source and run
+ *     `npm run assets:frames -- media-source/<clip>.mp4`: it writes the frame
+ *     sequence, posters and src/data/generated/film-frames.json (read below).
  *   • If a new plate has a different composition, update its `anchors` and
  *     check the framing at desktop and phone sizes (`?debug` exposes each
  *     scene's camera as window.__eye / window.__cosmic).
@@ -19,7 +20,8 @@
  *  so they stay correct at every viewport size and crop.
  */
 import meta from '@/data/generated/media-meta.json';
-import type { FilmAsset, MediaAsset, NormPoint, VideoSources } from '@/types/media';
+import frames from '@/data/generated/film-frames.json';
+import type { FilmAsset, FilmFrames, MediaAsset, NormPoint, VideoSources } from '@/types/media';
 
 type Plate = { width: number; height: number };
 const norm = (plate: Plate, x: number, y: number): NormPoint => ({ x: x / plate.width, y: y / plate.height });
@@ -37,7 +39,7 @@ export interface EyeAnchors extends Record<string, unknown> {
 }
 
 export interface FilmAnchors extends Record<string, unknown> {
-  /** Where the still's forward push is heading — the light of the transition builds here. */
+  /** Where the drone is flying (the footage's focus of expansion, full frame) — the transformation gathers here. */
   heading: NormPoint;
 }
 
@@ -56,8 +58,47 @@ export interface CosmicAnchors extends Record<string, unknown> {
 /* ── Plates ─────────────────────────────────────────────────────────────── */
 
 const EYE = meta.heroEye;
-const CITY = meta.city;
 const COSMIC = meta.cosmic;
+
+/* ── The film's frame sequence ──────────────────────────────────────────── */
+
+const FRAMES: FilmFrames = {
+  count: frames.count,
+  fps: frames.fps,
+  digits: frames.digits,
+  desktop: {
+    path: `${frames.base}/frames/desktop/`,
+    width: frames.desktop.width,
+    height: frames.desktop.height,
+    poster: `${frames.base}/poster.webp`,
+    cropX: 0,
+    cropW: 1,
+  },
+  mobile: {
+    path: `${frames.base}/frames/mobile/`,
+    width: frames.mobile.width,
+    height: frames.mobile.height,
+    poster: `${frames.base}/poster-mobile.webp`,
+    cropX: frames.mobile.cropX,
+    cropW: frames.mobile.cropW,
+  },
+  motion: frames.motion as [number, number, number][],
+  light: frames.light as [number, number, number][],
+};
+
+/** The focus of expansion of the camera's forward motion (where the flight is heading), full-frame uv. */
+function flightHeading(): NormPoint {
+  let x = 0;
+  let y = 0;
+  let n = 0;
+  for (const [s, bx, by] of FRAMES.motion) {
+    if (s - 1 < 0.004) continue;
+    x += bx / (1 - s);
+    y += by / (1 - s);
+    n++;
+  }
+  return n ? { x: x / n, y: y / n } : { x: 0.5, y: 0.5 };
+}
 
 /** Mirror a left-side arm polyline onto the right side (the entity is near-symmetric about x=835). */
 const mirror = (pts: [number, number][], axis = 835): [number, number][] =>
@@ -125,35 +166,24 @@ export const media = {
   } satisfies MediaAsset<EyeAnchors> as MediaAsset<EyeAnchors>,
 
   /**
-   * 02 — the film: a low drone flight through the city that becomes the Cosmic
-   * God. The city exists only here. Until footage is supplied, the still is
-   * shown with a slow forward push and the site composites the transition.
+   * 02 — the film: a low drone flight down a city avenue that becomes the
+   * Cosmic God. The city exists only here, as footage: a frame sequence
+   * scrubbed by scroll (scripts/extract-frames.mjs). Its first frame is the
+   * poster and the reduced-motion plate.
    */
   film: {
     id: 'film',
-    alt: 'A vast futuristic city at night, its towers and waterways glowing with blue light.',
-    width: CITY.width,
-    height: CITY.height,
-    lqip: CITY.lqip,
+    alt: 'A low drone flight down a futuristic city avenue at dusk, towers on both sides and electric light arcing between them.',
+    width: frames.desktop.width,
+    height: frames.desktop.height,
+    lqip: frames.lqip,
     image: {
-      avif: '/assets/images/city/city.avif',
-      webp: '/assets/images/city/city.webp',
-      liteAvif: '/assets/images/city/city-lite.avif',
-      liteWebp: '/assets/images/city/city-lite.webp',
+      avif: `${frames.base}/poster.avif`,
+      webp: `${frames.base}/poster.webp`,
     },
     priority: 'idle',
-    // The glowing ring at the heart of the still: where the push is heading.
-    anchors: { heading: norm(CITY, 848, 340) },
-    // One file, flight + (optionally) the baked transition — docs/assets.md:
-    //   npm run assets:video -- film film media-source/flight.mp4 media-source/morph.mp4 --scrub
-    // footage: {
-    //   desktop: '/assets/video/film/film-1080p.mp4',
-    //   mobile: '/assets/video/film/film-720p.mp4',
-    //   fps: 24,
-    //   flight: 9, // seconds of drone flight
-    //   morph: 6, // seconds of city → Cosmic God baked in after it (0 = the site composites it)
-    //   heading: { x: 0.5, y: 0.38 }, // where the flight is heading as it ends
-    // },
+    anchors: { heading: flightHeading() },
+    frames: FRAMES,
   } satisfies FilmAsset<FilmAnchors> as FilmAsset<FilmAnchors>,
 
   /** 03 — the six-armed cosmic intelligence. */

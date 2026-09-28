@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { OrbitDial } from '@/components/ui/OrbitDial';
 import styles from './SectionHeading.module.css';
 
 interface SectionHeadingProps {
@@ -12,11 +13,22 @@ interface SectionHeadingProps {
 }
 
 /** Section title in the house lockup: tracked kicker · heavy grotesk · hairline italic. */
-export function SectionHeading({ index, kicker, bold, serif, lead, align = 'start', id }: SectionHeadingProps) {
+export function SectionHeading({
+  index,
+  kicker,
+  bold,
+  serif,
+  lead,
+  align = 'start',
+  id,
+}: SectionHeadingProps) {
   return (
     <header className={`${styles.heading} ${styles[align]}`}>
       <p className={styles.kicker} data-reveal="up">
-        <span className="t-num">{index}</span>
+        <span className={`t-num ${styles.index}`}>
+          <OrbitDial />
+          {index}
+        </span>
         <span className={styles.rule} data-reveal="line" />
         <span>{kicker}</span>
       </p>

@@ -21,7 +21,7 @@ interface PlateMediaProps {
 /**
  * Renders a manifest asset inside a camera plate: blurred LQIP → decoded still →
  * (optional) ambient loop layered on top. The still always remains as the
- * poster/fallback. (The film's scroll-scrubbed footage is handled by ScrubVideo.)
+ * poster/fallback. (The film's scroll-scrubbed footage is a frame sequence: FilmScene.)
  */
 export const PlateMedia = forwardRef<PlateMediaHandle, PlateMediaProps>(function PlateMedia(
   { asset, className, onReady },

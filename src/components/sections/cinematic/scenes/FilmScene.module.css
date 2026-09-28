@@ -1,124 +1,76 @@
+/* The film fills the stage edge to edge: no frame, no controls, no container. */
 .layer {
   position: absolute;
   inset: 0;
   overflow: hidden;
   visibility: hidden;
   contain: strict;
-  background: var(--c-void);
 }
 
-.frame {
-  position: absolute;
-  inset: 0;
-  will-change: opacity;
-}
-
-/* The camera's forward push (scaled about where the flight is heading). */
-.push {
-  position: absolute;
-  inset: 0;
-  will-change: transform;
-}
-
-.plate {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform-origin: 0 0;
-  will-change: transform;
-  backface-visibility: hidden;
-}
-
-.video {
+/* The first frame (with its blurred placeholder) until the sequence draws. */
+.poster {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0;
-  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.92) brightness(0.88);
 }
-
-/* Footage mode: the video is the camera; the still and its haze step aside. */
-.layer:not([data-mode='still']) .video {
-  opacity: 1;
-}
-.layer:not([data-mode='still']) .plate,
-.layer:not([data-mode='still']) .haze {
+/* Once drawing, the canvas owns the frame — and must be able to turn transparent. */
+.layer[data-drawn] .poster {
   visibility: hidden;
 }
 
-/* Colour grade shared with the entity: navy floor, cool highlights, readable type. */
-.grade {
+.host {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 80% 70% at 50% 42%, transparent 30%, rgb(5 6 10 / 0.5) 100%),
-    linear-gradient(180deg, rgb(5 6 10 / 0.35) 0%, transparent 22%, transparent 55%, rgb(5 6 10 / 0.78) 100%);
+  will-change: opacity;
+}
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-/* As the light builds, the frame closes in around it: the edges sink into the
-   cosmos' deep violet-black while the centre stays open to the light. */
-.tint {
+/* ── Plain mode (no WebGL): atmosphere carries the transformation ── */
+.layer[data-mode='plain'] .host::after {
+  content: '';
   position: absolute;
   inset: 0;
-  opacity: 0;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 45%, transparent 40%, rgb(5 6 10 / 0.55) 100%),
+    linear-gradient(180deg, rgb(5 6 10 / 0.25), transparent 30%, transparent 65%, rgb(5 6 10 / 0.5));
+}
+.plainFog {
+  position: absolute;
+  inset: 0;
   pointer-events: none;
+  opacity: 0.25;
   will-change: opacity;
   background: radial-gradient(
-    ellipse 68% 60% at var(--hx, 50%) var(--hy, 40%),
-    transparent 22%,
-    rgb(30 20 96 / 0.5) 58%,
-    rgb(8 6 30 / 0.92) 100%
+    ellipse 70% 62% at 50% 50%,
+    transparent 25%,
+    rgb(74 44 170 / 0.55) 62%,
+    rgb(16 10 48 / 0.94) 100%
   );
 }
-
-/* ── Haze at three depths: the drone flies through it (still only) ──
-   Each layer is a drifting, fog-masked gradient scaled with the push at its
-   own rate (far → near) for real parallax. */
-.haze {
+.plainEnergy {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  will-change: transform;
-}
-.hazeDrift {
-  position: absolute;
-  inset: 0;
-  width: 200%;
+  opacity: 0;
+  will-change: transform, opacity;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgb(200 214 255 / 0.55) 0%,
+      rgb(92 120 255 / 0.35) 18%,
+      transparent 46%
+    ),
+    radial-gradient(ellipse 60% 40% at 50% 50%, rgb(139 107 255 / 0.4), transparent 70%);
   mask-image: url('/assets/textures/fog.webp');
-  mask-repeat: repeat-x;
-  animation: haze-drift linear infinite;
-}
-@keyframes haze-drift {
-  to {
-    transform: translateX(-50%);
-  }
-}
-/* far: a band of mist on the horizon over the water */
-.haze0 .hazeDrift {
-  top: 34%;
-  height: 26%;
-  mask-size: 50% 100%;
-  background: linear-gradient(180deg, transparent, rgb(150 150 240 / 0.3) 45%, transparent);
-  animation-duration: 140s;
-}
-/* mid: low fog drifting between the towers */
-.haze1 .hazeDrift {
-  top: 52%;
-  height: 42%;
-  mask-size: 50% 100%;
-  background: linear-gradient(180deg, transparent, rgb(118 110 220 / 0.32) 40%, rgb(60 58 150 / 0.42) 100%);
-  animation-duration: 95s;
-}
-/* near: soft wisps sweeping past the lens */
-.haze2 .hazeDrift {
-  top: 58%;
-  height: 50%;
-  mask-size: 50% 100%;
-  opacity: 0.5;
-  background: linear-gradient(180deg, transparent, rgb(180 176 255 / 0.28) 50%, transparent);
-  animation-duration: 48s;
-  animation-direction: reverse;
+  mask-size: 60% 60%;
 }

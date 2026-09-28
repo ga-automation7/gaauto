@@ -5,7 +5,7 @@
  *  idle     → requested after the window `load` event, when the main thread is idle
  *  near     → requested only when the stage approaches the scene
  */
-import type { FilmFootage, MediaAsset, VideoSources } from '@/types/media';
+import type { MediaAsset, VideoSources } from '@/types/media';
 import { getDeviceProfile } from './device';
 
 let idlePromise: Promise<void> | null = null;
@@ -38,15 +38,4 @@ export async function decodeImage(img: HTMLImageElement): Promise<void> {
 export function playableVideo(asset: MediaAsset): VideoSources | undefined {
   const device = getDeviceProfile();
   return asset.video && !device.reducedMotion && !device.saveData ? asset.video : undefined;
-}
-
-/**
- * The film footage this device should download and scrub, or null: never with
- * reduced motion or Save-Data, and not on low-tier devices (the still is flown
- * instead — scrubbing video needs a capable decoder).
- */
-export function footageSource(footage: FilmFootage | undefined): string | null {
-  const device = getDeviceProfile();
-  if (!footage || device.reducedMotion || device.saveData || device.tier === 'low') return null;
-  return device.isMobile ? (footage.mobile ?? footage.desktop) : footage.desktop;
 }

@@ -31,6 +31,14 @@
   font-weight: 500;
   color: var(--c-white);
 }
+/* The index sits at the centre of a slowly turning orbit dial. */
+.index {
+  position: relative;
+  isolation: isolate;
+}
+.index > :first-child {
+  z-index: -1;
+}
 .rule {
   width: 56px;
   height: 1px;

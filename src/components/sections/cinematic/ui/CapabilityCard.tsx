@@ -8,7 +8,15 @@ import styles from './CapabilityCard.module.css';
  * A capability as a small poster in the site's lockup language, lit by the
  * object its hand holds. Shared by the cinematic HUD and the static film.
  */
-export function CapabilityCard({ service, total, className }: { service: Service; total: number; className?: string }) {
+export function CapabilityCard({
+  service,
+  total,
+  className,
+}: {
+  service: Service;
+  total: number;
+  className?: string;
+}) {
   return (
     <div
       className={`${styles.card} ${className ?? ''}`}

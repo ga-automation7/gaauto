@@ -9,6 +9,8 @@ import type { FilmStore } from './filmState';
 /** Cross-scene handles (cameras etc.) so effects can follow one scene into the next. */
 export interface StageShared {
   cameras: Partial<Record<'eye' | 'cosmic', SceneCamera>>;
+  /** The film's energy fully covers the entity this frame — it need not render beneath. */
+  filmCovers: boolean;
 }
 
 export interface StageContextValue {
@@ -18,7 +20,7 @@ export interface StageContextValue {
   /** Size of the sticky stage viewport (CSS px). */
   size: SizeStore;
   shared: StageShared;
-  /** The film's mode (still / video / baked) and heading, shared by film, light bridge and entity. */
+  /** How the film's transformation is rendered (WebGL compositor or plain), shared by film and entity. */
   film: FilmStore;
 }
 

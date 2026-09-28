@@ -22,27 +22,38 @@ export interface VideoSources {
   poster?: string;
 }
 
+/** One resolution of the film's frame sequence. */
+export interface FrameSet {
+  /** Folder holding 000.webp, 001.webp … */
+  path: string;
+  width: number;
+  height: number;
+  /** First frame, shown until the sequence has arrived. */
+  poster: string;
+  /** The horizontal slice of the full frame this set shows (0–1): phones get a centred portrait crop. */
+  cropX: number;
+  cropW: number;
+}
+
 /**
- * The opening film's footage: ONE scroll-scrubbed video — the drone flight through
- * the city and, optionally, the transition into the Cosmic God baked into the
- * same file. Encode it all-intra (every frame a keyframe) so any frame can be
- * shown instantly while scrolling — see docs/assets.md.
+ * The opening film's footage as a FRAME SEQUENCE (scripts/extract-frames.mjs):
+ * individual frames scroll-scrub instantly in either direction, and the site
+ * blends neighbouring frames along the camera's measured motion.
  */
-export interface FilmFootage {
-  desktop: string;
-  mobile?: string;
-  /** Frame rate of the encode; seeks land on exact frames. */
+export interface FilmFrames {
+  count: number;
   fps: number;
-  /** Seconds of drone flight at the start of the footage. */
-  flight: number;
+  /** Digits in the frame file names. */
+  digits: number;
+  desktop: FrameSet;
+  mobile: FrameSet;
   /**
-   * Seconds of city → Cosmic God transition baked into the footage after the
-   * flight, its last frame matching the entity plate. 0 = the site composites
-   * the transition itself (light bridge).
+   * Camera motion from each frame to the next, as x' = s·x + b in full-frame
+   * normalised coordinates: [s, bx, by].
    */
-  morph: number;
-  /** Where the flight is heading at the end of the flight (normalised frame point) — the light builds here. */
-  heading: NormPoint;
+  motion: [number, number, number][];
+  /** Mean colour of each frame (0–1). */
+  light: [number, number, number][];
 }
 
 /**
@@ -68,9 +79,9 @@ export interface MediaAsset<A extends Record<string, unknown> = Record<string, u
   anchors: A;
 }
 
-/** The film: a still (poster, and the fallback until footage exists) plus the footage. */
+/** The film: a poster still (also the reduced-motion plate) plus the frame sequence. */
 export interface FilmAsset<
   A extends Record<string, unknown> = Record<string, unknown>,
 > extends MediaAsset<A> {
-  footage?: FilmFootage;
+  frames: FilmFrames;
 }

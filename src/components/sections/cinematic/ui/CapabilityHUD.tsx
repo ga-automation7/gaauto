@@ -74,7 +74,10 @@ export const CapabilityHUD = forwardRef<CapabilityHUDHandle, CapabilityHUDProps>
       if (!path || !ring || !anchor.current.valid) return;
       const { x, y } = anchor.current;
       const riseY = y - 28;
-      path.setAttribute('d', `M${x.toFixed(1)},${y.toFixed(1)} V${riseY.toFixed(1)} L${hand.x.toFixed(1)},${hand.y.toFixed(1)}`);
+      path.setAttribute(
+        'd',
+        `M${x.toFixed(1)},${y.toFixed(1)} V${riseY.toFixed(1)} L${hand.x.toFixed(1)},${hand.y.toFixed(1)}`,
+      );
       ring.setAttribute('cx', hand.x.toFixed(1));
       ring.setAttribute('cy', hand.y.toFixed(1));
     },

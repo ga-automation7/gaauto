@@ -1,0 +1,128 @@
+.titles {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-ui);
+  pointer-events: none;
+}
+
+.beat {
+  position: absolute;
+  inset: calc(var(--header-h) + 2vh) var(--gutter) calc(var(--stage-ui-bottom, 0px) + 7vh);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  visibility: hidden;
+  will-change: transform;
+}
+.left {
+  align-items: flex-start;
+  text-align: left;
+}
+.center {
+  align-items: center;
+  text-align: center;
+}
+.right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* A soft darkening behind the words: legible over the brightest sky. */
+.scrim {
+  position: absolute;
+  inset: -12% -20%;
+  z-index: -1;
+  opacity: 0;
+  background: radial-gradient(
+    ellipse 48% 44% at var(--sx, 50%) 50%,
+    rgb(4 5 14 / 0.6),
+    rgb(4 5 14 / 0.25) 55%,
+    transparent 78%
+  );
+  will-change: opacity;
+}
+.left .scrim {
+  --sx: 28%;
+}
+.right .scrim {
+  --sx: 72%;
+}
+
+.kicker {
+  margin-bottom: clamp(18px, 3vh, 34px);
+  font-size: clamp(0.72rem, 0.95vw, 0.95rem);
+  font-weight: 300;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgb(236 240 255 / 0.86);
+  margin-right: -0.5em;
+  text-shadow: 0 1px 24px rgb(4 5 14 / 0.9);
+}
+
+.words {
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  margin: 0;
+}
+
+/* Each line rises out of its own mask. */
+.mask {
+  display: block;
+  overflow: clip;
+  overflow-clip-margin: 0.35em;
+  padding: 0.04em 0.06em 0.02em;
+  margin: -0.04em -0.06em -0.02em;
+}
+.line {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 760;
+  line-height: 0.86;
+  letter-spacing: -0.052em;
+  white-space: nowrap;
+  color: var(--c-white);
+  text-shadow:
+    0 0 1px rgb(255 255 255 / 0.2),
+    0 6px 60px rgb(4 5 14 / 0.55);
+  will-change: transform, filter, opacity;
+  transform-origin: 50% 60%;
+}
+.accent {
+  color: var(--c-lavender);
+  text-shadow:
+    0 0 40px rgb(139 107 255 / 0.45),
+    0 6px 60px rgb(4 5 14 / 0.5);
+}
+
+.xl .line {
+  font-size: clamp(3.4rem, 10.6vw, 13.5rem);
+}
+.l .line {
+  font-size: clamp(2.6rem, 7.4vw, 9.5rem);
+}
+/* FASTER. — it owns the screen. */
+.mega .line {
+  font-size: clamp(5rem, 23.5vw, 30rem);
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+}
+
+@media (max-width: 767px) {
+  .beat {
+    inset: calc(var(--header-h) + 1vh) var(--gutter) calc(var(--stage-ui-bottom, 0px) + 9vh);
+  }
+  .xl .line {
+    font-size: clamp(2.8rem, 15.5vw, 6rem);
+  }
+  .l .line {
+    font-size: clamp(2.2rem, 11vw, 4.6rem);
+  }
+  .mega .line {
+    font-size: clamp(3.6rem, 23vw, 9rem);
+  }
+  .kicker {
+    letter-spacing: 0.38em;
+    margin-right: -0.38em;
+  }
+}
