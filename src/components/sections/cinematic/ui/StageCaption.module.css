@@ -1,0 +1,98 @@
+.caption {
+  --lockup-size: clamp(2.5rem, 5.4vw, 6rem);
+  position: absolute;
+  z-index: var(--z-ui);
+  visibility: hidden;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  color: var(--c-white);
+}
+
+.bottom-left {
+  left: var(--gutter);
+  bottom: calc(var(--stage-ui-bottom, 0px) + clamp(40px, 9vh, 110px));
+  max-width: min(640px, calc(100% - 2 * var(--gutter)));
+  align-items: flex-start;
+  text-align: left;
+}
+
+/* Centred with auto margins — GSAP animates this element's transform. */
+.bottom-center {
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  bottom: calc(var(--stage-ui-bottom, 0px) + clamp(40px, 8vh, 96px));
+  width: min(760px, calc(100% - 2 * var(--gutter)));
+  align-items: center;
+  text-align: center;
+}
+
+.center {
+  inset: 0;
+  margin: auto;
+  height: fit-content;
+  width: min(900px, calc(100% - 2 * var(--gutter)));
+  align-items: center;
+  text-align: center;
+}
+
+.kicker {
+  margin-bottom: 1.3em;
+  color: rgb(236 240 255 / 0.8);
+}
+
+.lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  margin: 0;
+  text-shadow: 0 2px 40px rgb(5 6 10 / 0.55);
+}
+
+.mask {
+  display: block;
+  overflow: clip;
+  padding: 0 0.08em 0.1em;
+  margin: 0 -0.08em -0.1em;
+}
+
+.bold {
+  display: block;
+  font-size: var(--lockup-size);
+  font-weight: 650;
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+}
+
+.serif {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: calc(var(--lockup-size) * 1.08);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  -webkit-text-stroke: 0.012em currentColor;
+}
+
+.support {
+  margin-top: 1.4em;
+  max-width: 34ch;
+  color: rgb(226 231 255 / 0.78);
+  text-shadow: 0 1px 24px rgb(5 6 10 / 0.8);
+}
+
+.bottom-center .support,
+.center .support {
+  max-width: 44ch;
+}
+
+@media (max-width: 767px) {
+  .caption {
+    --lockup-size: clamp(2.3rem, 11.5vw, 3.4rem);
+  }
+  .bottom-left {
+    right: var(--gutter);
+  }
+}

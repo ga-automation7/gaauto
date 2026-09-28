@@ -1,0 +1,219 @@
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Everything rests until its card is on screen (the card sets data-live). */
+.svg * {
+  animation-play-state: paused;
+}
+:global([data-live]) .svg * {
+  animation-play-state: running;
+}
+
+/* ── Strokes ─────────────────────────────────────────────────── */
+.hair {
+  fill: none;
+  stroke: rgb(170 182 255 / 0.22);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.dash {
+  fill: none;
+  stroke: rgb(180 196 255 / 0.5);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.tick {
+  stroke: #7ea0ff;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.rim {
+  fill: none;
+  stroke: rgb(200 212 255 / 0.7);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.arc {
+  fill: none;
+  stroke: #dbe3ff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.scan {
+  stroke: rgb(160 186 255 / 0.55);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.bracket {
+  fill: none;
+  stroke: rgb(200 212 255 / 0.45);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.edge {
+  fill: none;
+  stroke: rgb(140 160 255 / 0.28);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.star {
+  fill: #e6ebff;
+}
+.satellite {
+  fill: #9fb4ff;
+}
+.link {
+  fill: none;
+  stroke: rgb(150 170 255 / 0.5);
+  stroke-width: 1;
+  stroke-dasharray: 4 7;
+  vector-effect: non-scaling-stroke;
+}
+.lane {
+  fill: none;
+  stroke: rgb(120 140 255 / 0.18);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.laneFlow {
+  fill: none;
+  stroke: rgb(170 190 255 / 0.75);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 18 140;
+  vector-effect: non-scaling-stroke;
+}
+.beam {
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.beamFlow {
+  fill: none;
+  stroke: #f2f5ff;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 26 220;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ── Motion: slow, continuous, never busy ────────────────────── */
+.spinSlow,
+.spinFast,
+.spinReverse,
+.orbitA,
+.orbitB {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.spinSlow {
+  animation: spin 60s linear infinite;
+}
+.spinFast {
+  animation: spin 7s linear infinite;
+  transform-box: view-box;
+  transform-origin: 240px 180px;
+}
+.spinReverse {
+  animation: spin 34s linear infinite reverse;
+}
+.orbitA,
+.orbitB {
+  transform-box: view-box;
+}
+.orbitA {
+  animation: spin 14s linear infinite;
+}
+.orbitB {
+  animation: spin 21s linear infinite reverse;
+}
+.sweep {
+  animation: sweep 5.5s var(--ease-in-out) infinite alternate;
+}
+.breathe {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: breathe 4.2s ease-in-out infinite;
+}
+.twinkle {
+  animation: twinkle 3.6s ease-in-out infinite;
+}
+.flow {
+  animation: flow 2.6s linear infinite;
+}
+.flowSlow {
+  animation: flow 4.4s linear infinite;
+}
+.flowFast {
+  animation: flow-long 2.2s linear infinite;
+}
+/* Dashed links: a whole number of dash periods per loop, so it never jumps. */
+.link.flow,
+.link.flowSlow {
+  animation-name: flow-dash;
+}
+
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes sweep {
+  from {
+    transform: translateY(-110px);
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  to {
+    transform: translateY(110px);
+    opacity: 0.2;
+  }
+}
+@keyframes breathe {
+  0%,
+  100% {
+    scale: 0.9;
+    opacity: 0.85;
+  }
+  50% {
+    scale: 1.12;
+    opacity: 1;
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes flow {
+  to {
+    stroke-dashoffset: -158;
+  }
+}
+@keyframes flow-long {
+  to {
+    stroke-dashoffset: -246;
+  }
+}
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -110;
+  }
+}
+
+:global(html[data-motion='reduced']) .svg * {
+  animation: none !important;
+}

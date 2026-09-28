@@ -1,0 +1,41 @@
+/* Violet fog at every edge fading to a black point in the corners — subtle,
+   static (no per-frame cost), under the header so navigation stays crisp. */
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-header) - 1);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 130% 118% at 50% 46%, transparent 56%, rgb(34 18 86 / 0.22) 80%, rgb(10 5 26 / 0.58) 100%),
+    linear-gradient(90deg, rgb(52 30 130 / 0.1), transparent 14%, transparent 86%, rgb(52 30 130 / 0.1));
+}
+@media (max-width: 767px) {
+  .vignette {
+    background: radial-gradient(ellipse 150% 120% at 50% 46%, transparent 60%, rgb(30 16 80 / 0.18) 84%, rgb(10 5 26 / 0.5) 100%);
+  }
+}
+
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  background-image: url("/assets/textures/grain.png");
+  background-size: 192px 192px;
+  /* plain alpha (a page-wide blend mode would be recomposited every frame) */
+  opacity: 0.16;
+  animation: grain 1.1s steps(6) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+:global(html[data-motion='reduced']) .grain {
+  animation: none;
+}

@@ -1,0 +1,48 @@
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* Violet nebula fog in the corners — one soft layer, drifting and breathing
+   very slowly on the compositor. Atmospheric, never a purple page. */
+.fog {
+  position: absolute;
+  inset: -12%;
+  will-change: transform;
+  background:
+    radial-gradient(ellipse 42% 40% at 6% 4%, rgb(98 64 210 / 0.22), transparent 70%),
+    radial-gradient(ellipse 40% 38% at 96% 10%, rgb(70 92 228 / 0.16), transparent 70%),
+    radial-gradient(ellipse 44% 40% at 4% 96%, rgb(74 50 190 / 0.18), transparent 70%),
+    radial-gradient(ellipse 42% 40% at 96% 94%, rgb(98 64 210 / 0.2), transparent 70%);
+  animation: drift 90s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from {
+    transform: translate3d(-1.5%, -1%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(1.5%, 1.2%, 0) scale(1.06);
+  }
+}
+
+.motes {
+  position: absolute;
+  inset: 0;
+}
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Phones: quieter. */
+@media (max-width: 767px) {
+  .fog {
+    opacity: 0.8;
+  }
+}

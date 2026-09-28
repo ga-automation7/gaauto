@@ -1,0 +1,148 @@
+.section {
+  position: relative;
+  padding: clamp(96px, 14vh, 160px) 0 clamp(88px, 12vh, 140px);
+  overflow-x: clip;
+}
+
+/* Violet nebula drifting behind the composition (slower than the page). */
+.nebula {
+  position: absolute;
+  inset: 8% -10% 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 40% 30% at 78% 30%, rgb(92 64 210 / 0.12), transparent 70%),
+    radial-gradient(ellipse 38% 28% at 12% 72%, rgb(60 86 220 / 0.09), transparent 70%);
+}
+
+.inner {
+  position: relative;
+}
+
+/* ── One compact header row: lockup left, lead right ─────────── */
+.heading {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 36ch);
+  align-items: end;
+  gap: 18px 48px;
+  margin-bottom: clamp(28px, 3.4vw, 48px);
+}
+.kicker {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--c-text-2);
+}
+.kicker :global(.t-num) {
+  letter-spacing: 0.12em;
+  font-weight: 500;
+  color: var(--c-white);
+}
+.rule {
+  width: 56px;
+  height: 1px;
+  background: var(--c-line-3);
+}
+.lockup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.25em;
+  margin: 0;
+}
+.bold {
+  display: block;
+  font-size: clamp(2.4rem, 4.6vw, 5rem);
+  font-weight: 650;
+  line-height: 0.92;
+  letter-spacing: -0.055em;
+  color: var(--c-white);
+}
+.serif {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 5vw, 5.4rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: var(--c-lavender);
+  -webkit-text-stroke: 0.01em currentColor;
+}
+.lead {
+  justify-self: end;
+  margin: 0;
+}
+
+/* ── The bento: three across, Intelligence tall at the centre ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-areas:
+    'perception intelligence orchestration'
+    'automation intelligence execution';
+  gap: 14px;
+}
+.slot {
+  display: flex;
+  min-width: 0;
+}
+.slot > * {
+  flex: 1;
+}
+.perception {
+  grid-area: perception;
+}
+.intelligence {
+  grid-area: intelligence;
+}
+.orchestration {
+  grid-area: orchestration;
+}
+.automation {
+  grid-area: automation;
+}
+.execution {
+  grid-area: execution;
+}
+
+@media (max-width: 1099px) {
+  .heading {
+    grid-template-columns: 1fr;
+  }
+  .lead {
+    justify-self: start;
+  }
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'perception intelligence'
+      'orchestration intelligence'
+      'automation execution';
+  }
+}
+
+/* Phones: a swipeable row of compact cards. */
+@media (max-width: 699px) {
+  .grid {
+    display: flex;
+    gap: 12px;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 0 var(--gutter) 6px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+  .grid::-webkit-scrollbar {
+    display: none;
+  }
+  .slot {
+    flex: 0 0 80vw;
+    scroll-snap-align: start;
+  }
+}

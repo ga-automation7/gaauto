@@ -1,0 +1,267 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  visibility: hidden;
+  contain: strict;
+}
+
+.plate {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+  backface-visibility: hidden;
+  /* When pulled back (portrait), the plate dissolves into the void */
+  mask-image: linear-gradient(180deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+}
+
+.grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 75% 70% at 50% 44%, transparent 45%, rgb(5 6 10 / 0.6) 100%),
+    linear-gradient(180deg, rgb(5 6 10 / 0.3) 0%, transparent 18%, transparent 70%, rgb(5 6 10 / 0.72) 100%);
+}
+
+/* ── Energy along the arms (plate space) ─────────────────────── */
+.traces {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.arm {
+  --o: 0;
+  --flow: 0;
+}
+
+.traceGlow,
+.trace,
+.flow {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 600ms var(--ease-out);
+}
+
+.traceGlow {
+  stroke-width: 9;
+  opacity: calc(var(--o) * 0.22);
+}
+
+.trace {
+  stroke-width: 2.2;
+  opacity: var(--o);
+}
+
+.flow {
+  stroke: #ffffff;
+  stroke-width: 3;
+  stroke-dasharray: 2 34;
+  opacity: var(--flow);
+  animation: flow 1.8s linear infinite;
+  animation-play-state: paused;
+}
+
+.arm[data-active='true'] .trace {
+  opacity: 1;
+}
+.arm[data-active='true'] .traceGlow {
+  opacity: 0.4;
+}
+.arm[data-active='true'] .flow {
+  opacity: 0.85;
+}
+/* Only animate what can be seen: the active arm, or every arm during the finale */
+.arm[data-active='true'] .flow,
+[data-flowing='true'] .flow {
+  animation-play-state: running;
+}
+
+/* Energy flows from the heart outward to the hand */
+@keyframes flow {
+  from {
+    stroke-dashoffset: 36;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Hand halos ───────────────────────────────────────────────── */
+/* Centred with margins, not `translate`: GSAP owns the transform of animated elements. */
+.halo {
+  position: absolute;
+  width: calc(var(--plate-h) * 0.15);
+  aspect-ratio: 1;
+  margin: calc(var(--plate-h) * -0.075) 0 0 calc(var(--plate-h) * -0.075);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.haloGlow,
+.haloRing,
+.haloDash {
+  position: absolute;
+  border-radius: 50%;
+  transition:
+    opacity 700ms var(--ease-out),
+    scale 900ms var(--ease-out);
+}
+
+.haloGlow {
+  inset: 0;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--accent) 45%, white) 0%,
+    color-mix(in srgb, var(--accent) 55%, transparent) 22%,
+    transparent 64%
+  );
+  opacity: 0.55;
+}
+
+.haloRing {
+  inset: 16%;
+  border: 1px solid color-mix(in srgb, var(--accent) 60%, white);
+  opacity: 0.35;
+}
+
+.haloDash {
+  inset: 4%;
+  border: 1px dashed color-mix(in srgb, var(--accent) 50%, white);
+  opacity: 0;
+  animation: spin 18s linear infinite;
+}
+
+.halo[data-active='true'] .haloGlow {
+  opacity: 1;
+  scale: 1.45;
+}
+.halo[data-active='true'] .haloRing {
+  opacity: 0.9;
+  scale: 1.12;
+}
+.halo[data-active='true'] .haloDash {
+  opacity: 0.6;
+}
+
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* ── The heart (breathes with the body — scale driven by the render loop) ── */
+.core {
+  position: absolute;
+  width: calc(var(--plate-h) * 0.2);
+  aspect-ratio: 1;
+  margin: calc(var(--plate-h) * -0.1) 0 0 calc(var(--plate-h) * -0.1);
+  opacity: 0;
+  pointer-events: none;
+  /* scaled + faded by the timeline */
+  will-change: transform, opacity;
+}
+.coreInner {
+  position: absolute;
+  inset: 34%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgb(255 255 255 / 0.9) 0%,
+    rgb(206 218 255 / 0.55) 22%,
+    rgb(120 140 255 / 0.18) 50%,
+    transparent 72%
+  );
+  will-change: transform;
+}
+/* The living render draws the heart inside the chest itself. */
+.plate[data-living] .core {
+  visibility: hidden;
+}
+
+/* ── Living entity (WebGL) ─────────────────────────────────────── */
+.glHost {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.glCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* When the living render is up, the still image steps aside (overlays remain). */
+.plate[data-living] .still {
+  visibility: hidden;
+}
+
+/* ── Cosmic fog drifting across the foot of the frame ──────────── */
+.fog {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 200%;
+  height: 46%;
+  pointer-events: none;
+  opacity: 0.68;
+  background: linear-gradient(180deg, transparent 0%, rgb(96 86 220 / 0.55) 55%, rgb(40 44 140 / 0.7) 100%);
+  mask-image: url('/assets/textures/fog.webp');
+  mask-size: 50% 100%;
+  mask-repeat: repeat-x;
+  animation: fog-drift 70s linear infinite;
+}
+@keyframes fog-drift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ── The eyes open (still-plate fallback; the living render draws its own) ───────────────────────────────────────────── */
+.eyes {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.eye {
+  position: absolute;
+  width: calc(var(--plate-h) * 0.038);
+  aspect-ratio: 1.6;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    #ffffff 0%,
+    rgb(190 215 255 / 0.9) 18%,
+    rgb(111 216 255 / 0.3) 45%,
+    transparent 72%
+  );
+}
+
+/* The last of the atmosphere rushing past as the camera comes out of the light:
+   fog-masked violet air, scaled outward from the heart (forward motion). */
+.rush {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  background: radial-gradient(
+    ellipse 70% 62% at 50% 40%,
+    transparent 0%,
+    transparent 16%,
+    rgb(126 118 246 / 0.5) 44%,
+    rgb(52 44 170 / 0.82) 100%
+  );
+  mask-image: url('/assets/textures/fog.webp');
+  mask-size: 55% 70%;
+  mask-repeat: repeat;
+}

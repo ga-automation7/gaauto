@@ -1,0 +1,98 @@
+/**
+ * "What we can build" — representative systems, described by how they work.
+ * These are capabilities, not client case studies: no results are claimed.
+ */
+import type { UseCase } from '@/types/content';
+
+export const useCases: UseCase[] = [
+  {
+    id: 'lead-automation',
+    category: 'Sales',
+    title: 'Lead automation',
+    summary: 'Every enquiry captured, qualified and routed in seconds — whichever channel it arrives on.',
+    flow: ['Form, ad or DM arrives', 'AI scores intent', 'CRM record created', 'Right person notified'],
+    stack: ['Website forms', 'CRM', 'AI scoring'],
+    services: ['ai-automation', 'crm-ops'],
+  },
+  {
+    id: 'support',
+    category: 'Support',
+    title: 'Customer support agent',
+    summary: 'Answers grounded in your own knowledge base, around the clock, with a clean hand-off to your team.',
+    flow: ['Customer asks', 'Agent searches your docs', 'Answers or acts', 'Escalates when needed'],
+    stack: ['LLM', 'Knowledge base (RAG)', 'Helpdesk'],
+    services: ['ai-agents'],
+  },
+  {
+    id: 'whatsapp',
+    category: 'Sales',
+    title: 'WhatsApp automation',
+    summary: 'Instant replies, catalogues, reminders and follow-ups on the channel your customers already use.',
+    flow: ['Message received', 'Intent detected', 'Reply, quote or booking', 'Logged to CRM'],
+    stack: ['WhatsApp Business API', 'AI agent', 'CRM'],
+    services: ['ai-agents', 'workflow'],
+  },
+  {
+    id: 'sales-assistant',
+    category: 'Sales',
+    title: 'AI sales assistant',
+    summary: 'Drafts proposals, preps call notes and chases follow-ups so your team spends time selling.',
+    flow: ['Deal stage changes', 'Assistant drafts next step', 'Rep reviews in one click', 'Sent and tracked'],
+    stack: ['CRM', 'LLM', 'Email'],
+    services: ['ai-agents', 'crm-ops'],
+  },
+  {
+    id: 'appointments',
+    category: 'Operations',
+    title: 'Appointment systems',
+    summary: 'Booking, confirmations, reminders and rescheduling — handled without anyone touching a calendar.',
+    flow: ['Customer picks a slot', 'Calendar + payment synced', 'Reminders on WhatsApp', 'No-shows rebooked'],
+    stack: ['Calendar', 'Payments', 'WhatsApp'],
+    services: ['workflow', 'websites'],
+  },
+  {
+    id: 'internal-workflows',
+    category: 'Operations',
+    title: 'Internal workflow automation',
+    summary: 'Approvals, onboarding and hand-offs between teams that simply happen, with a record of every step.',
+    flow: ['Request submitted', 'Routed for approval', 'Systems updated', 'Everyone informed'],
+    stack: ['Forms', 'Sheets / database', 'Slack or email'],
+    services: ['workflow'],
+  },
+  {
+    id: 'crm-automation',
+    category: 'Data',
+    title: 'CRM automation',
+    summary: 'Clean, enriched records and pipelines that update themselves, so the CRM finally reflects reality.',
+    flow: ['Activity happens', 'Record enriched', 'Stage moved', 'Task created'],
+    stack: ['CRM', 'Enrichment', 'AI'],
+    services: ['crm-ops'],
+  },
+  {
+    id: 'websites',
+    category: 'Web',
+    title: 'Websites that convert',
+    summary: 'Custom-coded websites and landing pages, fast and precise, with every enquiry flowing into your systems.',
+    flow: ['Visitor lands', 'Clear, fast pages', 'Enquiry captured', 'Routed automatically'],
+    stack: ['Custom code', 'Forms', 'CRM'],
+    services: ['websites'],
+  },
+  {
+    id: 'data-processing',
+    category: 'Data',
+    title: 'Document & data processing',
+    summary: 'Invoices, forms and PDFs read, checked and entered automatically — people only review the exceptions.',
+    flow: ['Document arrives', 'AI extracts fields', 'Validated & matched', 'Posted to your system'],
+    stack: ['Document AI', 'Validation rules', 'Accounting / ERP'],
+    services: ['ai-automation', 'custom-ai'],
+  },
+  {
+    id: 'reporting',
+    category: 'Data',
+    title: 'Automated reporting',
+    summary: 'The numbers you check every week, compiled, explained and delivered before you ask.',
+    flow: ['Data collected', 'Metrics computed', 'AI writes the summary', 'Delivered on schedule'],
+    stack: ['Database', 'Dashboards', 'LLM summaries'],
+    services: ['crm-ops', 'custom-ai'],
+  },
+];

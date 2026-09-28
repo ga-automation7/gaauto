@@ -1,0 +1,72 @@
+.band {
+  position: relative;
+  display: grid;
+  align-items: end;
+  min-height: 120vh;
+  padding-bottom: clamp(72px, 14vh, 160px);
+  overflow: clip;
+  isolation: isolate;
+}
+
+/* The orbit system (it fades toward its own edges as it draws — no mask, no band). */
+.field {
+  position: absolute;
+  inset: 0 0 12%;
+  z-index: -1;
+}
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.copy {
+  position: relative;
+  text-align: center;
+}
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+.kicker span {
+  color: var(--c-text-4);
+}
+.statement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: clamp(20px, 2.6vw, 36px) 0 0;
+}
+.bold {
+  display: block;
+  font-size: clamp(3rem, 8.4vw, 9.6rem);
+  font-weight: 650;
+  line-height: 0.88;
+  letter-spacing: -0.06em;
+  color: var(--c-white);
+}
+.serif {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: clamp(2.9rem, 8.2vw, 9.4rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: var(--c-lavender);
+  -webkit-text-stroke: 0.01em currentColor;
+}
+.support {
+  max-width: 42ch;
+  margin: clamp(24px, 3vw, 40px) auto 0;
+}
+
+@media (max-width: 767px) {
+  .band {
+    min-height: 100vh;
+  }
+}

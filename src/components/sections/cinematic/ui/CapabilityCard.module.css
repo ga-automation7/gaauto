@@ -1,0 +1,182 @@
+/* ── The card: a small poster in the site's lockup language, lit by its hand ── */
+.card {
+  position: relative;
+  overflow: hidden;
+  padding: 24px 26px 20px;
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgb(12 15 34 / 0.86), rgb(5 6 12 / 0.93));
+  border: 1px solid rgb(170 182 255 / 0.14);
+  box-shadow:
+    0 40px 90px rgb(0 0 0 / 0.5),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+  animation: content-in 800ms var(--ease-out) both;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent 80%);
+  opacity: 0.9;
+}
+
+/* The object in the hand lights the card from its corner */
+.aura {
+  position: absolute;
+  right: -90px;
+  top: -110px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 38%, transparent) 0%, transparent 65%);
+  opacity: 0.55;
+  pointer-events: none;
+  animation: aura 6.5s ease-in-out infinite;
+}
+@keyframes aura {
+  50% {
+    opacity: 0.85;
+    scale: 1.08;
+  }
+}
+
+@keyframes content-in {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0 round 20px);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 20px);
+  }
+}
+
+.head {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.kicker {
+  font-size: 0.6875rem;
+  font-weight: 300;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgb(230 235 255 / 0.72);
+  padding-top: 6px;
+}
+.glyph {
+  width: 46px;
+  height: 46px;
+  color: color-mix(in srgb, var(--accent) 80%, white);
+  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 70%, transparent));
+}
+
+.title {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: var(--c-white);
+}
+.titleBold {
+  font-size: clamp(1.9rem, 2.7vw, 2.75rem);
+  font-weight: 650;
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+}
+.titleSerif {
+  font-family: var(--font-serif);
+  font-size: clamp(2.05rem, 2.95vw, 3rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  -webkit-text-stroke: 0.012em currentColor;
+  color: color-mix(in srgb, var(--accent) 22%, white);
+}
+
+.desc {
+  position: relative;
+  margin-top: 14px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--c-text-2);
+}
+
+.caps {
+  position: relative;
+  margin-top: 16px;
+  border-top: 1px solid rgb(170 182 255 / 0.12);
+}
+.caps li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgb(170 182 255 / 0.12);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--c-text);
+}
+.capIndex {
+  color: var(--c-text-3);
+  font-size: 0.75rem;
+}
+
+.foot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+.explore {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--c-white);
+}
+.explore:hover span {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.count {
+  font-size: 0.8125rem;
+  font-weight: 560;
+  color: var(--c-white);
+}
+.count span {
+  color: var(--c-text-3);
+}
+
+@media (max-width: 767px) {
+  .card {
+    padding: 18px 18px 14px;
+  }
+  .titleBold {
+    font-size: 1.75rem;
+  }
+  .titleSerif {
+    font-size: 1.9rem;
+  }
+  .desc {
+    font-size: 0.875rem;
+    margin-top: 10px;
+  }
+  .caps li {
+    padding: 7px 0;
+  }
+  .caps li:nth-child(3) {
+    display: none;
+  }
+  .aura {
+    width: 220px;
+    height: 220px;
+  }
+}

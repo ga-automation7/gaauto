@@ -1,0 +1,37 @@
+.track {
+  position: relative;
+  /* film length in small-viewport units + the sticky screen itself */
+  height: calc(var(--film-length) * 100svh + 100lvh);
+}
+
+.probe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100svh;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.anchor {
+  position: absolute;
+  left: 0;
+  top: calc(var(--at) * 100svh);
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  scroll-margin-top: 0;
+}
+
+.viewport {
+  /* UI that must stay visible above mobile toolbars sits this far up from the bottom */
+  --stage-ui-bottom: calc(100lvh - 100svh);
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100lvh;
+  overflow: hidden;
+  contain: layout paint size;
+  isolation: isolate;
+}

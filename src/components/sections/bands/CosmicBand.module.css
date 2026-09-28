@@ -1,0 +1,105 @@
+.band {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 118vh;
+  overflow: clip;
+  isolation: isolate;
+}
+
+/* The field settles from 1.06 → 1 as the band enters (data-zoom). */
+.frame {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+.field {
+  position: absolute;
+  inset: 0;
+}
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* (The field fades toward its own edges as it draws — see NeuralStars — so
+   it melts into the page above and below without a per-frame mask.) */
+.fog {
+  position: absolute;
+  inset: -10% -10% auto;
+  height: 120%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 45% 35% at 16% 30%, rgb(100 66 214 / 0.2), transparent 70%),
+    radial-gradient(ellipse 40% 34% at 86% 72%, rgb(70 90 230 / 0.14), transparent 70%);
+}
+
+.copy {
+  position: relative;
+  text-align: center;
+}
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+.kicker span {
+  color: var(--c-text-4);
+}
+.statement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: clamp(22px, 3vw, 40px) 0 0;
+}
+.bold {
+  display: block;
+  font-size: clamp(3.4rem, 10vw, 11.5rem);
+  font-weight: 650;
+  line-height: 0.86;
+  letter-spacing: -0.06em;
+  color: var(--c-white);
+}
+.serif {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: clamp(3.2rem, 9.4vw, 10.8rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: var(--c-lavender);
+  -webkit-text-stroke: 0.01em currentColor;
+}
+.support {
+  max-width: 44ch;
+  margin: clamp(26px, 3.4vw, 48px) auto 0;
+}
+
+.metaLeft,
+.metaRight {
+  position: absolute;
+  bottom: clamp(24px, 5vh, 56px);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-text-4);
+}
+.metaLeft {
+  left: var(--gutter);
+}
+.metaRight {
+  right: var(--gutter);
+}
+
+@media (max-width: 767px) {
+  .band {
+    min-height: 100vh;
+  }
+}

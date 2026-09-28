@@ -1,0 +1,201 @@
+.section {
+  position: relative;
+  padding: var(--section-y) 0;
+  /* transparent: the one page-wide atmosphere shows through (no edges of its own) */
+  background: radial-gradient(ellipse 34% 30% at 72% 50%, rgb(91 76 255 / 0.1), transparent 100%);
+  overflow: clip;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.85fr) 1.15fr;
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+}
+
+.copy {
+  --lockup-size: clamp(2.4rem, 4.8vw, 5.2rem);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 36px;
+}
+.tab {
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--c-line-2);
+  font-size: 0.8125rem;
+  font-weight: 560;
+  color: var(--c-text-2);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+.tab:hover {
+  color: var(--c-white);
+  border-color: var(--c-line-3);
+}
+.tab[aria-selected='true'] {
+  color: var(--c-void);
+  background: var(--c-white);
+  border-color: var(--c-white);
+}
+
+.detail {
+  min-height: 170px;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--c-line);
+}
+.detailText {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--c-text);
+  animation: fade-up 600ms var(--ease-out) both;
+}
+.toolList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 18px;
+  animation: fade-up 700ms var(--ease-out) 80ms both;
+}
+.toolList li {
+  padding: 5px 11px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--c-white);
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+}
+
+/* ── Network ─────────────────────────────────────────────────── */
+.viz {
+  --px: 0;
+  --py: 0;
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  justify-self: center;
+}
+.svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.layerTools {
+  transform: translate(calc(var(--px) * -18px), calc(var(--py) * -18px));
+  transition: transform 900ms var(--ease-out);
+}
+.layerHubs {
+  transform: translate(calc(var(--px) * -8px), calc(var(--py) * -8px));
+  transition: transform 900ms var(--ease-out);
+}
+
+.orbit {
+  fill: none;
+  stroke: rgb(160 172 255 / 0.12);
+  stroke-width: 1;
+}
+.orbitFaint {
+  fill: none;
+  stroke: rgb(160 172 255 / 0.06);
+  stroke-dasharray: 2 8;
+}
+
+.tool {
+  opacity: 0.22;
+  transition: opacity 600ms var(--ease-out);
+}
+.tool[data-on='true'] {
+  opacity: 1;
+}
+.toolEdge {
+  stroke: rgb(190 200 255 / 0.3);
+  stroke-width: 1;
+}
+.toolLabel {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  fill: var(--c-text-2);
+}
+.tool[data-on='true'] .toolLabel {
+  fill: var(--c-white);
+}
+
+.hub {
+  opacity: 0.55;
+  transition: opacity 600ms var(--ease-out);
+}
+.hub[data-on='true'] {
+  opacity: 1;
+}
+.spoke {
+  fill: none;
+  stroke: color-mix(in srgb, var(--accent) 60%, transparent);
+  stroke-width: 1;
+}
+.hub[data-on='true'] .spoke {
+  stroke-width: 1.6;
+}
+.pulse {
+  fill: #fff;
+  /* a halo stroke, not a filter: moving dots must stay cheap to paint */
+  stroke: color-mix(in srgb, var(--accent) 45%, transparent);
+  stroke-width: 7;
+}
+.hubRing {
+  fill: rgb(8 10 24 / 0.9);
+  stroke: color-mix(in srgb, var(--accent) 70%, white);
+  stroke-width: 1;
+  transition: r 600ms var(--ease-out);
+}
+.hub[data-on='true'] .hubRing {
+  filter: drop-shadow(0 0 18px var(--accent));
+}
+.hubDot {
+  fill: var(--accent);
+}
+.hubLabel {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  fill: var(--c-white);
+}
+
+.core {
+  fill: var(--c-white);
+}
+.coreLabel {
+  font-family: var(--font-sans);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  fill: var(--c-void);
+}
+
+@media (max-width: 899px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .toolLabel {
+    display: none;
+  }
+  .hubLabel {
+    font-size: 24px;
+  }
+}

@@ -1,0 +1,118 @@
+/* ──────────────────────────────────────────────────────────────
+   GA AUTOMATIONS — design tokens
+   Palette derived from the three reference plates:
+     eye     → void blacks + human amber
+     city    → electric blue / ultraviolet light
+     cosmic  → navy → midnight → violet, starlight highlights
+   Rule of thumb: large dark fields, few bright focal points.
+   ────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Surfaces (darkest → lightest) */
+  --c-void: #05060a;
+  --c-abyss: #080b18;
+  --c-navy: #0b112b;
+  --c-midnight: #141c40;
+  --c-indigo: #232b5c;
+
+  /* Light */
+  --c-electric: #5b8cff;
+  --c-ultraviolet: #8b6bff;
+  --c-violet: #5a4fcf;
+  --c-cyan: #6fd8ff;
+  --c-magenta: #d07bff;
+  --c-amber: #f0a24a; /* the human iris — used sparingly */
+  --c-starlight: #f4f6ff;
+
+  /* Text */
+  --c-white: #ffffff;
+  --c-text: #f3f4ff;
+  --c-text-2: rgb(222 227 255 / 0.68);
+  --c-text-3: rgb(200 208 255 / 0.44);
+  --c-text-4: rgb(190 198 255 / 0.28);
+
+  /* Lines & fills */
+  --c-line: rgb(160 172 255 / 0.12);
+  --c-line-2: rgb(170 182 255 / 0.22);
+  --c-line-3: rgb(190 200 255 / 0.4);
+  --c-fill: rgb(120 132 255 / 0.04);
+  --c-fill-2: rgb(120 132 255 / 0.08);
+
+  /* Atmosphere — violet nebula at the outer edges (atmospheric, never a purple website) */
+  --c-lavender: #cbc4ff; /* occasional soft highlight in type */
+  --c-nebula: rgb(96 62 206);
+  --c-nebula-deep: rgb(44 28 120);
+
+  /* Editorial surfaces — dark translucent cards, 1px borders, very soft glow */
+  --surface-card: linear-gradient(180deg, rgb(22 26 58 / 0.5) 0%, rgb(8 10 26 / 0.74) 100%);
+  --border-card: rgb(176 186 255 / 0.12);
+  --border-card-hover: rgb(190 200 255 / 0.3);
+  --shadow-card: 0 40px 90px -50px rgb(70 84 255 / 0.45);
+
+  /* Signature gradients */
+  --g-signal: linear-gradient(90deg, var(--c-electric), var(--c-ultraviolet));
+  --g-horizon: linear-gradient(180deg, var(--c-void) 0%, var(--c-abyss) 45%, var(--c-navy) 100%);
+
+  /* Typography — editorial system
+     Heavy, tightly tracked neo-grotesk  +  hairline calligraphic italic serif,
+     ultra-wide tracked light caps for kickers, small medium-weight corner meta.
+     Mono is reserved for machine read-outs (HUD data, event logs) only. */
+  --font-sans: 'Inter Tight Variable', 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-serif: 'Cormorant Variable', 'Cormorant', 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --fs-mega: clamp(3.25rem, 12.5vw, 13.5rem);
+  --fs-display: clamp(2.6rem, 6.6vw, 7.25rem);
+  --fs-h1: clamp(2.2rem, 4.8vw, 5.25rem);
+  --fs-h2: clamp(1.75rem, 3.3vw, 3.5rem);
+  --fs-h3: clamp(1.3rem, 1.9vw, 1.9rem);
+  --fs-lead: clamp(1.075rem, 1.25vw, 1.3rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-label: 0.6875rem;
+  --fs-micro: 0.625rem;
+
+  --lh-tight: 0.95;
+  --lh-snug: 1.12;
+  --lh-body: 1.6;
+
+  --tracking-display: -0.055em;
+  --tracking-tight: -0.035em;
+  --tracking-label: 0.16em;
+  --tracking-kicker: 0.62em;
+
+  /* Space & layout */
+  --gutter: clamp(20px, 4.2vw, 72px);
+  --section-y: clamp(96px, 16vh, 200px);
+  --max-w: 1560px;
+  --radius-s: 6px;
+  --radius-m: 14px;
+  --radius-l: 22px;
+  --header-h: 76px;
+
+  /* Motion — heavy, precise, never bouncy */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-cinema: cubic-bezier(0.7, 0, 0.2, 1);
+  --dur-fast: 220ms;
+  --dur-base: 520ms;
+  --dur-slow: 1100ms;
+
+  /* Layers */
+  --z-stage: 0;
+  --z-content: 1;
+  --z-ui: 10;
+  --z-header: 50;
+  --z-menu: 80;
+  --z-cursor: 90;
+  --z-grain: 100;
+
+  color-scheme: dark;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --header-h: 64px;
+    --tracking-kicker: 0.46em;
+  }
+}

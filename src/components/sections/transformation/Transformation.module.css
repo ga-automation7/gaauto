@@ -1,0 +1,432 @@
+.section {
+  position: relative;
+  height: 340vh;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.8fr) 1.35fr;
+  gap: clamp(32px, 5vw, 96px);
+  align-items: center;
+  padding-top: var(--header-h);
+}
+
+.copy {
+  --lockup-size: clamp(2.4rem, 4.6vw, 5rem);
+}
+
+/* ── Phase stepper ───────────────────────────────────────────── */
+.phases {
+  margin-top: clamp(28px, 4vh, 48px);
+  border-top: 1px solid var(--c-line);
+}
+.phase {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--c-line);
+  opacity: 0.38;
+  transition: opacity 500ms var(--ease-out);
+}
+.phase[data-done='true'] {
+  opacity: 0.6;
+}
+.phase[data-active='true'] {
+  opacity: 1;
+}
+.phaseIndex {
+  font-size: 0.75rem;
+  font-weight: 560;
+  padding-top: 3px;
+  color: var(--c-text-2);
+}
+.phase[data-active='true'] .phaseIndex {
+  color: var(--c-cyan);
+}
+.phaseLabel {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--c-white);
+}
+.phaseText {
+  display: grid;
+  grid-template-rows: 0fr;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--c-text-2);
+  transition: grid-template-rows 600ms var(--ease-out), margin 600ms var(--ease-out);
+  overflow: hidden;
+  max-height: 0;
+}
+.phase[data-active='true'] .phaseText {
+  max-height: 120px;
+  margin-top: 6px;
+}
+
+/* ── Stage ───────────────────────────────────────────────────── */
+.visual {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.stage {
+  position: relative;
+  width: 100%;
+}
+.svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.gridLine {
+  fill: none;
+  stroke: rgb(140 160 255 / 0.14);
+  stroke-width: 1;
+}
+.edge {
+  fill: none;
+  stroke: url(#edgeGrad);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+/* Halo strokes, not filters: these move every frame and must stay cheap to paint. */
+.pulse {
+  fill: #fff;
+  stroke: rgb(143 168 255 / 0.4);
+  stroke-width: 7;
+}
+.particle {
+  fill: #cdbfff;
+  stroke: rgb(139 107 255 / 0.32);
+  stroke-width: 5;
+}
+
+.nodeAnchor {
+  position: absolute;
+  translate: -50% -50%;
+}
+.node {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 10px;
+  align-items: center;
+  min-width: 132px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgb(16 20 44 / 0.92), rgb(8 10 22 / 0.95));
+  border: 1px solid var(--c-line-2);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 0.45);
+  white-space: nowrap;
+}
+.nodeDot {
+  grid-row: span 2;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c-electric);
+  box-shadow: 0 0 10px var(--c-electric);
+}
+.nodeLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--c-white);
+}
+.nodeDetail {
+  grid-column: 2;
+  font-size: 0.625rem;
+  color: var(--c-text-3);
+}
+.input .nodeDot {
+  background: var(--c-cyan);
+  box-shadow: 0 0 10px var(--c-cyan);
+}
+.system .nodeDot {
+  background: var(--c-ultraviolet);
+  box-shadow: 0 0 10px var(--c-ultraviolet);
+}
+.output .nodeDot {
+  background: #62e0cf;
+  box-shadow: 0 0 10px #62e0cf;
+}
+.agent {
+  padding: 16px 20px;
+  border-color: rgb(139 107 255 / 0.6);
+  background: radial-gradient(circle at 30% 0%, rgb(139 107 255 / 0.35), transparent 70%), linear-gradient(180deg, rgb(20 22 52 / 0.95), rgb(9 10 24 / 0.96));
+  box-shadow: 0 0 60px rgb(139 107 255 / 0.35), 0 20px 50px rgb(0 0 0 / 0.5);
+}
+.agent .nodeLabel {
+  font-size: 1.05rem;
+}
+.agent .nodeDot {
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  box-shadow: 0 0 16px #b9a8ff;
+}
+
+/* ── Phase cards: one per phase, in one place, crossfading ─────── */
+.deck {
+  display: grid;
+}
+.card {
+  grid-area: 1 / 1;
+  padding: 16px 18px 18px;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-m);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  translate: 0 10px;
+  visibility: hidden;
+  transition:
+    opacity 0.55s var(--ease-out),
+    translate 0.55s var(--ease-out),
+    visibility 0s 0.55s;
+}
+.deck[data-phase='0'] .card[data-for='0'],
+.deck[data-phase='1'] .card[data-for='1'],
+.deck[data-phase='2'] .card[data-for='2'],
+.deck[data-phase='3'] .card[data-for='3'] {
+  opacity: 1;
+  translate: 0 0;
+  visibility: visible;
+  transition:
+    opacity 0.55s var(--ease-out),
+    translate 0.55s var(--ease-out),
+    visibility 0s;
+}
+/* Items arrive one by one whenever their card becomes the current one. */
+.deck[data-phase='0'] .card[data-for='0'] li,
+.deck[data-phase='1'] .card[data-for='1'] li,
+.deck[data-phase='2'] .card[data-for='2'] li {
+  animation: arrive 0.5s var(--ease-out) both;
+  animation-delay: calc(var(--i) * 70ms + 120ms);
+}
+@keyframes arrive {
+  from {
+    opacity: 0;
+    translate: -8px 0;
+  }
+}
+
+.cardHead {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 0.75rem;
+  color: var(--c-text-3);
+}
+.cardTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--c-white);
+}
+.cardMeta {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-text-4);
+}
+.live {
+  color: #62e0cf;
+}
+
+/* 01 · signals */
+.signals {
+  display: grid;
+  gap: 6px;
+}
+.signals li {
+  display: grid;
+  grid-template-columns: 76px 1fr auto;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0;
+  border-top: 1px solid var(--c-line);
+  font-size: 0.8125rem;
+}
+.source {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--c-cyan);
+}
+.input {
+  color: var(--c-text);
+}
+.tags {
+  display: flex;
+  gap: 6px;
+}
+.tags em {
+  padding: 2px 8px;
+  border: 1px solid rgb(139 107 255 / 0.4);
+  border-radius: 999px;
+  font-style: normal;
+  font-size: 0.6875rem;
+  white-space: nowrap;
+  color: var(--c-lavender);
+}
+
+/* 02 · connections */
+.connections {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.connections li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+}
+.online {
+  grid-row: span 2;
+  align-self: center;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #62e0cf;
+  box-shadow: 0 0 10px #62e0cf;
+}
+.tool {
+  font-size: 0.8125rem;
+  font-weight: 560;
+  color: var(--c-white);
+}
+.role {
+  font-size: 0.6875rem;
+  color: var(--c-text-3);
+}
+
+/* 03 · steps */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px 18px;
+}
+.steps li {
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 0;
+  border-top: 1px solid var(--c-line);
+  font-size: 0.8125rem;
+}
+.stepNo {
+  font-size: 0.6875rem;
+  color: var(--c-text-4);
+}
+.stepName {
+  color: var(--c-text);
+}
+.owner {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-electric);
+}
+.owner[data-owner='Team'] {
+  color: #f0c27a;
+}
+.owner[data-owner='System'] {
+  color: var(--c-ultraviolet);
+}
+
+/* 04 · event log (machine read-out) */
+.log {
+  display: grid;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  color: var(--c-text-2);
+}
+.event {
+  display: grid;
+  grid-template-columns: 76px 90px 1fr;
+  gap: 10px;
+  opacity: 0;
+}
+.eventSource {
+  color: var(--c-cyan);
+}
+.eventMsg {
+  color: var(--c-text);
+}
+
+@media (max-width: 899px) {
+  .section {
+    height: auto;
+    padding: var(--section-y) 0;
+  }
+  .sticky {
+    position: static;
+    height: auto;
+  }
+  .layout {
+    grid-template-columns: 1fr;
+    padding-top: 0;
+  }
+  .phaseText {
+    max-height: 120px;
+    margin-top: 6px;
+  }
+  .phase {
+    opacity: 0.85;
+  }
+  .node {
+    min-width: 0;
+    padding: 8px 10px;
+  }
+  .nodeLabel {
+    font-size: 0.75rem;
+  }
+  .nodeDetail {
+    display: none;
+  }
+  .agent .nodeDetail {
+    display: block;
+  }
+  .event {
+    grid-template-columns: 64px 1fr;
+  }
+  .eventSource {
+    display: none;
+  }
+  .signals li {
+    grid-template-columns: 64px 1fr;
+  }
+  .tags {
+    grid-column: 2;
+    flex-wrap: wrap;
+  }
+  .connections {
+    grid-template-columns: 1fr 1fr;
+  }
+  .steps {
+    grid-template-columns: 1fr;
+  }
+}

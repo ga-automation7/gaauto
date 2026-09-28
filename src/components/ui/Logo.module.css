@@ -1,0 +1,54 @@
+.logo {
+  --logo-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: var(--logo-size);
+  color: var(--c-white);
+  white-space: nowrap;
+}
+
+.sm {
+  --logo-size: 0.95rem;
+}
+.md {
+  --logo-size: 1.35rem;
+}
+.xl {
+  --logo-size: clamp(1.55rem, 3.1vw, 3.5rem);
+  gap: 0.42em;
+}
+
+.mark {
+  width: 1.45em;
+  height: 1.45em;
+  flex: none;
+  overflow: visible;
+}
+.ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.2;
+}
+.pupil {
+  fill: currentColor;
+}
+.ticks line {
+  stroke: #9aabff;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+}
+
+.wordmark {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.ga {
+  letter-spacing: -0.03em;
+}
+.xl .wordmark {
+  letter-spacing: -0.025em;
+}

@@ -1,0 +1,61 @@
+.circle {
+  --size: 52px;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  flex: none;
+  pointer-events: auto;
+  /* transform is owned by the magnetic effect (GSAP) — never transition it in CSS */
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    box-shadow 600ms var(--ease-out);
+}
+
+.light {
+  background: var(--c-white);
+  color: var(--c-void);
+  box-shadow: 0 0 0 0 rgb(255 255 255 / 0);
+}
+.light:hover {
+  box-shadow: 0 0 0 8px rgb(255 255 255 / 0.08), 0 0 40px rgb(140 160 255 / 0.35);
+}
+
+.dark {
+  background: transparent;
+  color: var(--c-white);
+  border: 1px solid var(--c-line-3);
+}
+.dark:hover {
+  background: var(--c-white);
+  color: var(--c-void);
+}
+
+.sm {
+  --size: 36px;
+}
+.md {
+  --size: 52px;
+}
+.lg {
+  --size: 72px;
+}
+
+.icon {
+  width: 42%;
+  height: 42%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 500ms var(--ease-out);
+}
+
+.circle:hover .icon {
+  transform: rotate(var(--rot, 0deg)) translateX(2px);
+}

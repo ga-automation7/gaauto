@@ -1,0 +1,197 @@
+.card {
+  --mx: 50%;
+  --my: 30%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-l);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 0.7s var(--ease-out),
+    border-color 0.6s var(--ease-out),
+    box-shadow 0.7s var(--ease-out);
+}
+
+/* ── The visual: layered depth, the module, a cursor light, metadata ── */
+.media {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--radius-l) - 6px);
+  background: #070918;
+  isolation: isolate;
+}
+.tall .media {
+  aspect-ratio: 4 / 5;
+}
+.square .media {
+  aspect-ratio: 1;
+}
+.landscape .media {
+  aspect-ratio: 4 / 3;
+}
+.wide .media {
+  aspect-ratio: 21 / 9;
+}
+
+/* Background layers: a low violet nebula, a cool core, fine stars (static). */
+.depth {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 22% 88%, rgb(92 60 200 / 0.3), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 78% 12%, rgb(60 90 220 / 0.18), transparent 70%),
+    radial-gradient(1px 1px at 18% 24%, rgb(220 228 255 / 0.7), transparent),
+    radial-gradient(1px 1px at 72% 66%, rgb(220 228 255 / 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 86% 38%, rgb(220 228 255 / 0.6), transparent),
+    radial-gradient(1px 1px at 38% 82%, rgb(220 228 255 / 0.45), transparent),
+    linear-gradient(180deg, #0a0d22, #06071a);
+}
+
+.visual {
+  position: absolute;
+  inset: 0;
+  transition: transform 1.4s var(--ease-out);
+}
+
+.light {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    380px circle at var(--mx) var(--my),
+    rgb(126 146 255 / 0.16),
+    rgb(139 107 255 / 0.06) 40%,
+    transparent 70%
+  );
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.meta {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 16px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-text-4);
+  transition: color 0.6s var(--ease-out);
+}
+
+/* ── Text ───────────────────────────────────────────────────── */
+.body {
+  padding: clamp(20px, 2.2vw, 30px) clamp(14px, 1.6vw, 22px) clamp(14px, 1.6vw, 20px);
+}
+.lockup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.3em;
+  margin: 0;
+}
+.bold {
+  font-size: clamp(1.5rem, 2.2vw, 2.2rem);
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--c-white);
+}
+.serif {
+  font-family: var(--font-serif);
+  font-size: clamp(1.65rem, 2.4vw, 2.4rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--c-lavender);
+  -webkit-text-stroke: 0.01em currentColor;
+}
+.text {
+  max-width: 44ch;
+  margin-top: 14px;
+  font-size: 0.975rem;
+  line-height: 1.6;
+  color: var(--c-text-2);
+}
+.trace {
+  margin-top: 18px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-text-4);
+  transition: color 0.6s var(--ease-out);
+}
+
+/* ── Compact: dense compositions (the journal bento) ─────────── */
+.compact {
+  padding: 8px;
+  border-radius: var(--radius-m);
+}
+.compact .media {
+  border-radius: calc(var(--radius-m) - 5px);
+  aspect-ratio: 16 / 10;
+}
+/* A tall compact card spans two rows: its visual grows to fill the height. */
+.compact.tall .media {
+  flex: 1 1 auto;
+  aspect-ratio: auto;
+  min-height: 260px;
+}
+.compact .meta {
+  left: 14px;
+  right: 14px;
+  top: 12px;
+  font-size: 0.5625rem;
+}
+.compact .body {
+  padding: 14px 10px 10px;
+}
+.compact .bold {
+  font-size: clamp(1.15rem, 1.45vw, 1.45rem);
+}
+.compact .serif {
+  font-size: clamp(1.25rem, 1.6vw, 1.6rem);
+}
+.compact .text {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.compact .trace {
+  margin-top: 12px;
+}
+
+/* Phones: every visual gets real height. */
+@media (max-width: 699px) {
+  .wide .media,
+  .tall .media {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* ── Hover: fine pointers only ──────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: var(--border-card-hover);
+    box-shadow: 0 50px 110px -50px rgb(90 100 255 / 0.55);
+  }
+  .card:hover .visual {
+    transform: scale(1.035);
+  }
+  .card:hover .light {
+    opacity: 1;
+  }
+  .card:hover .meta,
+  .card:hover .trace {
+    color: var(--c-text-2);
+  }
+}

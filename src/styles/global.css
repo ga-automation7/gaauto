@@ -1,0 +1,102 @@
+@import './tokens.css';
+@import './reset.css';
+@import './typography.css';
+
+html {
+  /* No decorative layer may ever widen the page (phones would zoom out to fit it). */
+  overflow-x: clip;
+  background: var(--c-void);
+  scrollbar-color: var(--c-indigo) var(--c-void);
+  scrollbar-width: thin;
+}
+
+body {
+  background: var(--c-void);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-kerning: normal;
+  overflow-x: clip;
+}
+
+::selection {
+  background: rgb(91 140 255 / 0.35);
+  color: var(--c-starlight);
+}
+
+:focus-visible {
+  outline: 1px solid var(--c-cyan);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Lenis — https://github.com/darkroomengineering/lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Page content sits above the fixed ambient atmosphere (AmbientCosmos). */
+#main,
+#contact {
+  position: relative;
+  z-index: 1;
+}
+
+/* Utilities */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: 16px;
+  z-index: calc(var(--z-grain) + 1);
+  padding: 10px 16px;
+  border-radius: var(--radius-s);
+  background: var(--c-starlight);
+  color: var(--c-void);
+  font-size: var(--fs-small);
+  font-weight: 560;
+  transform: translateY(-160%);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.skip-link:focus-visible {
+  transform: none;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Reduced motion — driven by the resolved preference (OS setting or visitor toggle) */
+html[data-motion='reduced'] *,
+html[data-motion='reduced'] *::before,
+html[data-motion='reduced'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}

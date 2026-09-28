@@ -1,0 +1,65 @@
+.glyph {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.glyph * {
+  vector-effect: non-scaling-stroke;
+}
+
+.fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.spin,
+.spinReverse,
+.float,
+.pulse {
+  transform-box: view-box;
+  transform-origin: 24px 24px;
+  animation-play-state: paused;
+}
+
+.spin {
+  animation: glyph-spin 14s linear infinite paused;
+}
+.spinReverse {
+  animation: glyph-spin 22s linear infinite reverse paused;
+}
+.float {
+  animation: glyph-float 5s ease-in-out infinite paused;
+}
+.pulse {
+  animation: glyph-pulse 3.2s ease-in-out infinite paused;
+}
+
+/* Animate while live, or while a host ([data-glyph-host]) is hovered or active */
+.live :is(.spin, .spinReverse, .float, .pulse),
+:global([data-glyph-host]:hover) .glyph :is(.spin, .spinReverse, .float, .pulse),
+:global([data-active='true']) .glyph :is(.spin, .spinReverse, .float, .pulse) {
+  animation-play-state: running;
+}
+
+@keyframes glyph-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes glyph-float {
+  50% {
+    transform: translateY(-1.5px) rotate(4deg);
+  }
+}
+@keyframes glyph-pulse {
+  50% {
+    transform: scale(0.82);
+  }
+}
